@@ -31,6 +31,7 @@ namespace OniHealth.Web
         {
             Initializer.Configure(services, Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +49,7 @@ namespace OniHealth.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "OniHealth");
@@ -58,6 +60,8 @@ namespace OniHealth.Web
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
 

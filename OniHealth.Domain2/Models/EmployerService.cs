@@ -6,22 +6,22 @@ namespace OniHealth.Domain.Models
     {
         private readonly IRepository<Employer> _employerRepository;
 
-        public EmployerService(IRepository<Employer> contatoRepository)
+        public EmployerService(IRepository<Employer> employerRepository)
         {
-            _employerRepository = contatoRepository;
+            _employerRepository = employerRepository;
         }
 
         public void Create(int id, string nome, string email)
         {
-            var contato = _employerRepository.GetById(id);
+            var employer = _employerRepository.GetById(id);
 
-            if (contato == null)
+            if (employer == null)
             {
-                contato = new Employer(nome, email);
-                _employerRepository.Save(contato);
+                employer = new Employer(nome, email);
+                _employerRepository.Save(employer);
             }
             else
-                contato.Update(nome, email);
+                employer.Update(nome, email);
         }
     }
 }

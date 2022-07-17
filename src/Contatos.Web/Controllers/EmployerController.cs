@@ -14,19 +14,23 @@ namespace OniHealth.Web.Controllers
         private readonly EmployerService _employerService;
         private readonly IRepository<Employer> _employerRepository;
 
-        public EmployerController(EmployerService contatoService,
-            IRepository<Employer> contatoRepository)
+        public EmployerController(EmployerService employerService,
+            IRepository<Employer> employerRepository)
         {
-            _employerService = contatoService;
-            _employerRepository = contatoRepository;
+            _employerService = employerService;
+            _employerRepository = employerRepository;
         }
 
+        /// <summary>
+        /// Return all the employers.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetFuncionarios()
         {
-            var employers = _employerRepository.GetAll();
+            IEnumerable<Employer> employers = _employerRepository.GetAll();
 
-            var employer = employers.Select(c => new EmployerDTO { Id = c.Id, Nome = c.Nome, Email = c.Email });
+            IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Nome = x.Nome, Email = x.Email });
 
             if (employer == null)
                 return NotFound(new { message = $"Funcionários não encontrados." });
@@ -38,7 +42,7 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFuncionario(int id)
         {
-            var employer = _employerRepository.GetById(id);
+            Employer employer = _employerRepository.GetById(id);
             if (employer == null)
             {
                 return NotFound(new { message = $"Funcionario de id={id} não encontrado" });
