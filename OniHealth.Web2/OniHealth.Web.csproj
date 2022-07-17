@@ -19,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\OniHealth.Application2\OniHealth.Application.csproj" />
-    <ProjectReference Include="..\..\OniHealth.Domain2\OniHealth.Domain.csproj" />
-    <ProjectReference Include="..\..\OniHealth.Infra2\OniHealth.Infra.csproj" />
+    <ProjectReference Include="..\OniHealth.Application2\OniHealth.Application.csproj" />
+    <ProjectReference Include="..\OniHealth.Domain2\OniHealth.Domain.csproj" />
+    <ProjectReference Include="..\OniHealth.Infra2\OniHealth.Infra.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
