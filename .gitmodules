@@ -1,0 +1,3 @@
+[submodule "OniHealth.Frontend"]
+	path = OniHealth.Frontend
+	url = https://github.com/AureoFJunior/OniHealth.Frontend.git

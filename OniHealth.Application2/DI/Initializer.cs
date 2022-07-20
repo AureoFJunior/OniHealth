@@ -15,7 +15,9 @@ namespace OniHealth.Application.DI
 
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
             services.AddScoped(typeof(EmployerService));
+
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
     }
