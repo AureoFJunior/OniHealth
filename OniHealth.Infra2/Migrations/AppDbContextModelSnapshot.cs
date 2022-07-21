@@ -33,9 +33,12 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Role")
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id");
 

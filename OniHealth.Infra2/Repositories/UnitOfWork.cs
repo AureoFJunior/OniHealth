@@ -13,7 +13,12 @@ namespace OniHealth.Infra.Repositories
             _context = context;
         }
 
-        public async Task Commit()
+        public void Commit()
+        {
+            _context.SaveChanges();
+        }
+
+        public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
         }

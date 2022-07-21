@@ -30,14 +30,13 @@ namespace OniHealth.Web.Controllers
         {
             IEnumerable<Employer> employers = _employerRepository.GetAll();
 
-            IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Nome = x.Nome, Email = x.Email });
+            IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Name = x.Name, Email = x.Email, Role = x.Role });
 
-            if (employer == null)
+            if (!employer.Any())
                 return NotFound(new { message = $"Funcionários não encontrados." });
 
             return Ok(employer);
         }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployer(int id)

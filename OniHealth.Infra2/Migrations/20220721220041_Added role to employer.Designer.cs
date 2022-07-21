@@ -11,8 +11,8 @@ using OniHealth.Infra.Context;
 namespace OniHealth.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220717000554_initial")]
-    partial class initial
+    [Migration("20220721220041_Added role to employer")]
+    partial class Addedroletoemployer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,12 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<short>("Role")
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id");
 
