@@ -4,6 +4,8 @@ namespace OniHealth.Domain.Models
 {
     public class Employer : BaseEntity
     {
+        public Employer(){}
+
         public Employer(string nome, string email)
         {
             ValidaCategoria(nome, email);

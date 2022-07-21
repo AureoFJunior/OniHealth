@@ -11,17 +11,48 @@ namespace OniHealth.Domain.Models
             _employerRepository = employerRepository;
         }
 
-        public void Create(int id, string nome, string email)
+        public async Task<Employer> CreateAsync(int id, string nome, string email)
         {
-            var employer = _employerRepository.GetById(id);
+            Employer employer = _employerRepository.GetById(id);
+            Employer includedEmployer = new Employer();
 
             if (employer == null)
             {
                 employer = new Employer(nome, email);
-                _employerRepository.Save(employer);
+                includedEmployer = await _employerRepository.CreateAsync(employer);
+                return includedEmployer;
             }
             else
-                employer.Update(nome, email);
+                return null;
+        }
+
+        public Employer Update(int id, string nome, string email)
+        {
+            Employer employer = _employerRepository.GetById(id);
+            Employer updatedEmployer = new Employer();
+
+            if (employer != null)
+            {
+                employer = new Employer(nome, email);
+                updatedEmployer = _employerRepository.Update(employer);
+                return updatedEmployer;
+            }
+            else
+                return null;
+        }
+
+        public Employer Delete(int id)
+        {
+            Employer employer = _employerRepository.GetById(id);
+            Employer deletedEmployer = new Employer();
+
+            if (employer != null)
+            {
+                deletedEmployer = _employerRepository.Delete(employer);
+                return deletedEmployer;
+            }
+            else
+                return null;
         }
     }
 }

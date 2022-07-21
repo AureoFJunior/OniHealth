@@ -37,19 +37,54 @@ namespace OniHealth.Infra.Repositories
             return new List<TEntity>();
         }
 
-        public virtual void Save(TEntity entity)
+        public virtual TEntity Create(TEntity entity)
         {
             _context.Set<TEntity>().Add(entity);
+            return entity;
         }
 
-        public virtual void SaveRange(IEnumerable<TEntity> entitys)
+        public virtual IEnumerable<TEntity> CreateRange(IEnumerable<TEntity> entitys)
         {
             _context.Set<TEntity>().AddRange(entitys);
+            return entitys;
+        }
+
+        public virtual TEntity Update(TEntity entity)
+        {
+            _context.Set<TEntity>().Update(entity);
+            return entity;
+        }
+
+        public virtual IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entitys)
+        {
+            _context.Set<TEntity>().UpdateRange(entitys);
+            return entitys;
+        }
+
+        public virtual TEntity Delete(TEntity entity)
+        {
+            _context.Set<TEntity>().Remove(entity);
+            return entity;
+        }
+
+        public virtual IEnumerable<TEntity> DeleteRange(IEnumerable<TEntity> entitys)
+        {
+            _context.Set<TEntity>().RemoveRange(entitys);
+            return entitys;
         }
         #endregion
 
         #region Async
-        public virtual async Task<TEntity> GetByIdAssync(int id)
+        public virtual async Task<int> GetLastId()
+        {
+            var query = _context.Set<TEntity>();
+            if (await query.AnyAsync())
+                return query.OrderByDescending(x => x.Id).FirstOrDefaultAsync().Id;
+
+            return 0;
+        }
+
+        public virtual async Task<TEntity> GetByIdAsync(int id)
         {
             var query = _context.Set<TEntity>().Where(e => e.Id == id);
 
@@ -69,14 +104,15 @@ namespace OniHealth.Infra.Repositories
             return new List<TEntity>();
         }
 
-        public virtual async Task SaveAsync(TEntity entity)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
+            return entity;
         }
-
-        public virtual async Task SaveRangeAsync(IEnumerable<TEntity> entitys)
+        public virtual async Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entitys)
         {
             await _context.Set<TEntity>().AddRangeAsync(entitys);
+            return entitys;
         }
         #endregion
     }

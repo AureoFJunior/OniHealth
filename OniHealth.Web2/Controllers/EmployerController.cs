@@ -26,7 +26,7 @@ namespace OniHealth.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetFuncionarios()
+        public async Task<IActionResult> GetEmployers()
         {
             IEnumerable<Employer> employers = _employerRepository.GetAll();
 
@@ -40,7 +40,7 @@ namespace OniHealth.Web.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetFuncionario(int id)
+        public async Task<IActionResult> GetEmployer(int id)
         {
             Employer employer = _employerRepository.GetById(id);
             if (employer == null)
