@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,9 @@ namespace OniHealth.Web
         public void ConfigureServices(IServiceCollection services)
         {
             Initializer.Configure(services, Configuration.GetConnectionString("DefaultConnection"));
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
             services.AddCors();
 
             services.AddSwaggerGen(c =>
