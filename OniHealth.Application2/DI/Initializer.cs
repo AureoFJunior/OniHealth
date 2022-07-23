@@ -14,9 +14,11 @@ namespace OniHealth.Application.DI
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conection));
 
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
+            services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddScoped(typeof(EmployerService));
+            services.AddScoped(typeof(UserService));
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }

@@ -56,7 +56,7 @@ namespace OniHealth.Web.Controllers
                 Employer employer = _employerRepository.GetById(id);
                 if (employer == null)
                 {
-                    return NotFound(new { message = $"Funcionario de id={id} não encontrado" });
+                    return NotFound(new { message = $"Funcionário de id={id} não encontrado" });
                 }
                 return Ok(employer);
             }
@@ -104,9 +104,7 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Delete an employer
         /// </summary>
-        /// <param name="name">Employer's name</param>
-        /// <param name="email">Employer's email</param>
-        /// <param name="role">Employer's role</param>
+        /// <param name="id">Employer's Id</param>
         /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteEmployer(int id)
