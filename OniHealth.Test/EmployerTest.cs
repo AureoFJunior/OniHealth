@@ -30,7 +30,8 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Assert.NotNull(await EmployerService.CreateAsync(0, "Teste Unitário", "Teste@gmail.com", EmployerRole.Worker));
+            Employer employer = new Employer("Teste Unitário", "Teste@gmail.com", EmployerRole.Worker);
+            Assert.NotNull(await EmployerService.CreateAsync(employer));
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace OniHealth.Test
 
             Employer employer = EmployerRepository.GetById(employerId);
 
-            Assert.NotNull(EmployerService.Update(employer.Id, "Teste Unitário Atualização", employer.Email, EmployerRole.Intern));
+            Assert.NotNull(EmployerService.Update(employer));
         }
 
         [Fact]

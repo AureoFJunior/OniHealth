@@ -75,9 +75,10 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                Employer employer = await _employerService.CreateAsync(0, name, email, role);
+                Employer employer = new Employer(name, email, role);
+                Employer createdEmployer = await _employerService.CreateAsync(employer);
 
-                return Ok(employer);
+                return Ok(createdEmployer);
 
             } catch (Exception ex){ return Problem($"Erro ao criar registro de Funcionário: {ex.Message}");}
         }
@@ -94,8 +95,12 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                Employer employer = _employerService.Update(id, name, email, role);
-                return Ok(employer);
+                Employer employer = new Employer(name, email, role);
+                employer.Id = id;
+
+                Employer updatedEmployer = _employerService.Update(employer);
+
+                return Ok(updatedEmployer);
 
             }
             catch (Exception ex) { return Problem($"Erro ao atualizar registro de Funcionário: {ex.Message}"); }

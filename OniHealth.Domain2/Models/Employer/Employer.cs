@@ -6,23 +6,23 @@ namespace OniHealth.Domain.Models
     {
         public Employer(){}
 
-        public Employer(string name, string email, short role)
+        public Employer(string name, string email, EmployerRole role)
         {
             ValidaCategoria(name, email, role);
             Name = name;
             Email = email;
-            Role = role;
+            Role = (short)role;
         }
 
         public string Name { get; set; }
         public string Email { get; set; }
         public short Role { get; set; }
 
-        public void Update(string name, string email, short role)
+        public void Update(string name, string email, EmployerRole role)
         {
             ValidaCategoria(name, email, role);
         }
-        private void ValidaCategoria(string name, string email, short role)
+        private void ValidaCategoria(string name, string email, EmployerRole role)
         {
             if (string.IsNullOrEmpty(name))
                 throw new InvalidOperationException("O nome é inválido");

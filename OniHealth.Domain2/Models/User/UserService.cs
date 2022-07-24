@@ -17,14 +17,13 @@ namespace OniHealth.Domain.Models
             _userRepository = userRepository;
         }
 
-        public async Task<User> CreateAsync(int id, string firstName, string lastName, string email, DateTime birthDate)
+        public async Task<User> CreateAsync(User user)
         {
-            User user = _userRepository.GetById(id);
+            var existentUser = _userRepository.GetById(user.Id);
             User includedUser = new User();
 
-            if (user == null)
+            if (existentUser == null)
             {
-                user = new User(firstName, lastName, email, birthDate);
                 includedUser = await _userRepository.CreateAsync(user);
                 return includedUser;
             }
@@ -32,14 +31,13 @@ namespace OniHealth.Domain.Models
                 return null;
         }
 
-        public User Update(int id, string firstName, string lastName, string email, DateTime birthDate)
+        public User Update(User user)
         {
-            User user = _userRepository.GetById(id);
+            User existentUser = _userRepository.GetById(user.Id);
             User updatedUser = new User();
 
-            if (user != null)
+            if (existentUser != null)
             {
-                user = new User(firstName, lastName, email, birthDate);
                 updatedUser = _userRepository.Update(user);
                 return updatedUser;
             }

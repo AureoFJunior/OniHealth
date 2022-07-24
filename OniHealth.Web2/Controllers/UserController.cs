@@ -66,17 +66,14 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Add a new user
         /// </summary>
-        /// <param name="firstName">User's first name</param>
-        /// <param name="lastName">User's last name</param>
-        /// <param name="email">User's email</param>
-        /// <param name="birthDate">User's birth date</param>
-        /// <returns></returns>
+        /// <param name="user">User to be added</param>
+        /// <returns>The added user</returns>
         [HttpPost]
-        public async Task<IActionResult> AddUser(string firstName, string lastName, string email, DateTime birthDate)
+        public async Task<IActionResult> AddUser(User user)
         {
             try
             {
-                User user = await _userService.CreateAsync(0, firstName, lastName, email, birthDate);
+                User createdUser = await _userService.CreateAsync(user);
 
                 return Ok(user);
 
@@ -86,17 +83,14 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Update an user
         /// </summary>
-        /// <param name="firstName">User's first name</param>
-        /// <param name="lastName">User's last name</param>
-        /// <param name="email">User's email</param>
-        /// <param name="birthDate">User's birth date</param>
-        /// <returns></returns>
+        /// <param name="user">User to be updated</param>
+        /// <returns>The updated user</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(int id, string firstName, string lastName, string email, DateTime birthDate)
+        public async Task<IActionResult> UpdateUser(User user)
         {
             try
             {
-                User user = _userService.Update(id, firstName, lastName, email, birthDate);
+                User updatedUser = _userService.Update(user);
                 return Ok(user);
 
             }
@@ -107,7 +101,7 @@ namespace OniHealth.Web.Controllers
         /// Delete an user
         /// </summary>
         /// <param name="id">User's Id</param>
-        /// <returns></returns>
+        /// <returns>The deleted user</returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {

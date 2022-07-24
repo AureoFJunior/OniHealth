@@ -30,7 +30,8 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Assert.NotNull(await UserService.CreateAsync(0, "Teste", "Unitário", "Teste@gmail.com", new DateTime(1995, 12, 6)));
+            User user = new User("Teste", "Unitário", "Teste@gmail.com", new DateTime(1995, 12, 6));
+            Assert.NotNull(await UserService.CreateAsync(user));
         }
 
         [Fact]
@@ -39,8 +40,9 @@ namespace OniHealth.Test
             int userId = await UserRepository.GetLastId();
 
             User user = UserRepository.GetById(userId);
+            user.LastName = "Unitário Atualização";
 
-            Assert.NotNull(UserService.Update(user.Id, "Teste", "Unitário Atualização", "Teste@gmail.com", new DateTime(1995, 12, 6)));
+            Assert.NotNull(UserService.Update(user));
         }
 
         [Fact]

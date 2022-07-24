@@ -33,7 +33,7 @@ namespace OniHealth.Domain.Models
                 throw new InvalidOperationException("O email é inválido");
 
             if (birthDate == DateTime.MinValue)
-                throw new InvalidOperationException("O cargo é inválido");
+                throw new InvalidOperationException("A data de nascimento é inválida");
         }
     }
 }
