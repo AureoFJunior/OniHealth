@@ -114,6 +114,7 @@ namespace OniHealth.Web.Controllers
         /// <param name="user">User to be added</param>
         /// <returns>The added user</returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> AddUser([FromBody] User user)
         {
             try
