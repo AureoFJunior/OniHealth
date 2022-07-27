@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using OniHealth.Web.DTOs;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OniHealth.Web.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class EmployerController : Controller
     {
@@ -31,7 +33,7 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                IEnumerable<Employer> employers = _employerRepository.GetAll();
+                IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
 
                 IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Name = x.Name, Email = x.Email, Role = x.Role });
 
@@ -53,7 +55,7 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                Employer employer = _employerRepository.GetById(id);
+                Employer employer = await _employerRepository.GetByIdAsync(id);
                 if (employer == null)
                 {
                     return NotFound(new { message = $"Funcionário de id={id} não encontrado" });
@@ -66,16 +68,13 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Add a new employer
         /// </summary>
-        /// <param name="name">Employer's name</param>
-        /// <param name="email">Employer's email</param>
-        /// <param name="role">Employer's role</param>
+        /// <param name="employer">Employer's to be added</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddEmployer(string name, string email, EmployerRole role)
+        public async Task<IActionResult> AddEmployer([FromBody] Employer employer)
         {
             try
             {
-                Employer employer = new Employer(name, email, role);
                 Employer createdEmployer = await _employerService.CreateAsync(employer);
 
                 return Ok(createdEmployer);
@@ -86,20 +85,14 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Update an employer
         /// </summary>
-        /// <param name="name">Employer's name</param>
-        /// <param name="email">Employer's email</param>
-        /// <param name="role">Employer's role</param>
+        /// <param name="employer">Employer's to be updated.</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateEmployer(int id, string name, string email, EmployerRole role)
+        public async Task<IActionResult> UpdateEmployer([FromBody] Employer employer)
         {
             try
             {
-                Employer employer = new Employer(name, email, role);
-                employer.Id = id;
-
                 Employer updatedEmployer = _employerService.Update(employer);
-
                 return Ok(updatedEmployer);
 
             }

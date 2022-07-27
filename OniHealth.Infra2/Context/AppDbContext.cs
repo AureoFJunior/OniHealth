@@ -9,5 +9,7 @@ namespace OniHealth.Infra.Context
         {
         }
         public DbSet<Employer> Employer { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }
