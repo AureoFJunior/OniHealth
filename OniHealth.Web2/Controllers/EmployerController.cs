@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using OniHealth.Web.DTOs;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OniHealth.Web.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class EmployerController : Controller
     {

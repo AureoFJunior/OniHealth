@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using OniHealth.Web.DTOs;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OniHealth.Web.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserService _userService;
@@ -20,6 +22,48 @@ namespace OniHealth.Web.Controllers
         {
             _userService = userService;
             _userRepository = userRepository;
+        }
+
+
+        /// <summary>
+        /// Log into the system and get the API token.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> LogInto(string userName, string password)
+        {
+            try
+            {
+                IEnumerable<User> users = _userRepository.GetAll();
+
+                User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
+
+                if (user == null)
+                    return NotFound(new { message = $"Usuários não encontrados." });
+
+                var token = UserService.GenerateToken(user);
+                var refreshToken = UserService.GenerateRefreshToken();
+                UserService.SaveRefreshToken(user.UserName, refreshToken);
+
+                if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
+                    return Problem($"Não foi possível autenticar o usuário {user.UserName}.");
+
+                UserDTO loggedUser = new UserDTO()
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    BirthDate = user.BirthDate,
+                    Token = token,
+                    RefreshToken = refreshToken
+                };
+
+                return Ok(loggedUser);
+
+            }
+            catch (Exception ex) { return Problem($"Erro ao autenticar o usuário: {ex.Message}"); }
         }
 
         /// <summary>

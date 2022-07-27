@@ -30,7 +30,7 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            User user = new User("Teste", "Unitário", "Teste@gmail.com", new DateTime(1995, 12, 6));
+            User user = new User("Teste", "Unitário", "unitarinho", "user@1234", "Teste@gmail.com", new DateTime(1995, 12, 6));
             Assert.NotNull(await UserService.CreateAsync(user));
         }
 

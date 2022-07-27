@@ -19,7 +19,7 @@ namespace OniHealth.Web.DTOs
         [Required]
         public DateTime BirthDate { get; set; }
 
-        [Required]
         public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

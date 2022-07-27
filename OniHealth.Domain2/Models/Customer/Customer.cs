@@ -18,10 +18,10 @@ namespace OniHealth.Domain.Models
 
         public string Name { get; set; }
         public string Email { get; set; }
-        
         public DateTime BirthDate { get; set; }
         public short SignedPlan { get; set; }
         public bool IsDependent { get; set; }
+        public string PhoneNumber { get; set; }
 
         public void Update(string name, string email, DateTime birthDate, short signedPlan, bool isDependent)
         {
