@@ -13,44 +13,55 @@ namespace OniHealth.Domain.Models
 
         public async Task<User> CreateAsync(User user)
         {
-            var existentUser = _userRepository.GetById(user.Id);
-            User includedUser = new User();
-
-            if (existentUser == null)
+            try
             {
-                includedUser = await _userRepository.CreateAsync(user);
-                return includedUser;
+                var existentUser = _userRepository.GetById(user.Id);
+                User includedUser = new User();
+
+                if (existentUser == null)
+                {
+                    includedUser = await _userRepository.CreateAsync(user);
+                    return includedUser;
+                }
+
+                throw new ConflictDatabaseException("User already exists.");
             }
-            else
-                return null;
+            catch (Exception ex) { throw ex; }
         }
 
         public User Update(User user)
         {
-            User existentUser = _userRepository.GetById(user.Id);
-            User updatedUser = new User();
-
-            if (existentUser != null)
+            try
             {
-                updatedUser = _userRepository.Update(user);
-                return updatedUser;
+                User existentUser = _userRepository.GetById(user.Id);
+                User updatedUser = new User();
+
+                if (existentUser != null)
+                {
+                    updatedUser = _userRepository.Update(user);
+                    return updatedUser;
+                }
+
+                throw new NotFoundDatabaseException("User don't exists yet.");
             }
-            else
-                return null;
+            catch (Exception ex) { throw ex; }
         }
 
         public User Delete(int id)
         {
-            User user = _userRepository.GetById(id);
-            User deletedUser = new User();
-
-            if (user != null)
+            try
             {
-                deletedUser = _userRepository.Delete(user);
-                return deletedUser;
+                User user = _userRepository.GetById(id);
+                User deletedUser = new User();
+
+                if (user != null)
+                {
+                    deletedUser = _userRepository.Delete(user);
+                    return deletedUser;
+                }
+                throw new NotFoundDatabaseException("User don't exists yet.");
             }
-            else
-                return null;
+            catch (Exception ex) { throw ex; }
         }
     }
 }

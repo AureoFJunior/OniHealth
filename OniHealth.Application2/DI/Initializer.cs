@@ -11,7 +11,7 @@ namespace OniHealth.Application.DI
     {
         public static void Configure(IServiceCollection services, string conection)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conection));
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conection));
 
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));

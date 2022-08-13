@@ -7,6 +7,7 @@ using OniHealth.Web.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using OniHealth.Domain;
 
 namespace OniHealth.Web.Controllers
 {
@@ -77,15 +78,12 @@ namespace OniHealth.Web.Controllers
             try
             {
                 IEnumerable<User> users = await _userRepository.GetAllAsync();
-
                 IEnumerable<UserDTO> user = users.Where(x => x != null).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" });
 
-                if (!user.Any())
-                    return NotFound(new { message = $"Usuários não encontrados." });
-
                 return Ok(user);
-
-            }catch(Exception ex) { return Problem($"Erro ao buscar registros de Usuários: {ex.Message}"); }
+            }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuários não encontrados" }); }
+            catch (Exception ex) { return Problem($"Erro ao buscar registros de Usuários: {ex.Message}"); }
         }
 
         /// <summary>
@@ -99,13 +97,10 @@ namespace OniHealth.Web.Controllers
             try
             {
                 User user = await _userRepository.GetByIdAsync(id);
-                if (user == null)
-                {
-                    return NotFound(new { message = $"Usuário de id={id} não encontrado" });
-                }
                 return Ok(user);
             }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de Usuário: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={id} não encontrado" }); }
+            catch (Exception ex) { return Problem($"Erro ao buscar registro de usuário: {ex.Message}"); }
         }
 
         /// <summary>
@@ -120,10 +115,10 @@ namespace OniHealth.Web.Controllers
             try
             {
                 User createdUser = await _userService.CreateAsync(user);
-
                 return Ok(createdUser);
-
-            } catch (Exception ex){ return Problem($"Erro ao criar registro de Usuário: {ex.Message}");}
+            }
+            catch (ConflictDatabaseException ex) { return Conflict(new { message = $"Usuário {user.UserName} já existe na base de dados" }); }
+            catch (Exception ex) { return Problem($"Erro ao criar registro de Usuário: {ex.Message}"); }
         }
 
         /// <summary>
@@ -138,8 +133,8 @@ namespace OniHealth.Web.Controllers
             {
                 User updatedUser = _userService.Update(user);
                 return Ok(updatedUser);
-
             }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={user.Id} não encontrado" }); }
             catch (Exception ex) { return Problem($"Erro ao atualizar registro de Usuário: {ex.Message}"); }
         }
 
@@ -155,8 +150,8 @@ namespace OniHealth.Web.Controllers
             {
                 User user = _userService.Delete(id);
                 return Ok(user);
-
             }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={id} não encontrado" }); }
             catch (Exception ex) { return Problem($"Erro ao remover registro de Usuário: {ex.Message}"); }
         }
     }

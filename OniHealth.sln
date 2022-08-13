@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OniHealth.Infra", "OniHealt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OniHealth.Web", "OniHealth.Web2\OniHealth.Web.csproj", "{FF58AA90-04A6-45F1-8BFC-BBB6C76A5F87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OniHealth.Test", "OniHealth.Test\OniHealth.Test.csproj", "{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OniHealth.Test", "OniHealth.Test\OniHealth.Test.csproj", "{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
