@@ -12,7 +12,7 @@ using OniHealth.Domain;
 namespace OniHealth.Web.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
         private readonly UserService _userService;
@@ -37,19 +37,27 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                IEnumerable<User> users = _userRepository.GetAll();
+                List<User> users = _userRepository.GetAll().ToList();
+
+                foreach(User userUpdate in users)
+                {
+                    userUpdate.IsLogged = 0;
+                    _userService.Update(userUpdate);
+                }
 
                 User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
 
                 if (user == null)
                     return NotFound(new { message = $"Usuários não encontrados." });
 
-                var token = TokenService.GenerateToken(user);
-                var refreshToken = TokenService.GenerateRefreshToken();
-                TokenService.SaveRefreshToken(user.UserName, refreshToken);
+                string token, refreshToken;
+                GenerateToken(user, out token, out refreshToken);
 
                 if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
                     return Problem($"Não foi possível autenticar o usuário {user.UserName}.");
+
+                user.IsLogged = 1;
+                _userService.Update(user);
 
                 UserDTO loggedUser = new UserDTO()
                 {
@@ -66,6 +74,13 @@ namespace OniHealth.Web.Controllers
 
             }
             catch (Exception ex) { return Problem($"Erro ao autenticar o usuário: {ex.Message}"); }
+        }
+
+        private static void GenerateToken(User user, out string token, out string refreshToken)
+        {
+            token = TokenService.GenerateToken(user);
+            refreshToken = TokenService.GenerateRefreshToken();
+            TokenService.SaveRefreshToken(user.UserName, refreshToken);
         }
 
         /// <summary>
@@ -101,6 +116,24 @@ namespace OniHealth.Web.Controllers
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={id} não encontrado" }); }
             catch (Exception ex) { return Problem($"Erro ao buscar registro de usuário: {ex.Message}"); }
+        }
+
+        /// <summary>
+        ///  Get a logged user.
+        /// </summary>
+        /// <returns>The logged user.</returns>
+        [HttpGet]
+        public async Task<IActionResult> IsLogged()
+        {
+            try
+            {
+                IEnumerable<User> users = await _userRepository.GetAllAsync();
+                UserDTO user = users.Where(x => x.IsLogged == 1).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" }).FirstOrDefault();
+
+                return Ok(user);
+            }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário logado não encontrado" }); }
+            catch (Exception ex) { return Problem($"Erro ao buscar registro de usuário logado: {ex.Message}"); }
         }
 
         /// <summary>

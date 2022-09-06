@@ -30,7 +30,7 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Employer employer = new Employer("Teste Unitário", "Teste@gmail.com", EmployerRole.Worker);
+            Employer employer = new Employer("Teste Unitário", "Teste@gmail.com", EmployerRole.Worker, 7000, "54996058917", "90050321");
             Assert.NotNull(await EmployerService.CreateAsync(employer));
         }
 

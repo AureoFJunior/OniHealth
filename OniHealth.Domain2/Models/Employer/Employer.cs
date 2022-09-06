@@ -6,23 +6,29 @@ namespace OniHealth.Domain.Models
     {
         public Employer(){}
 
-        public Employer(string name, string email, EmployerRole role)
+        public Employer(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
-            ValidaCategoria(name, email, role);
+            ValidaCategoria(name, email, role, salary, phoneNumber, zipCode);
             Name = name;
             Email = email;
             Role = (short)role;
+            Salary = salary;
+            PhoneNumber = phoneNumber;
+            ZipCode = zipCode;
         }
 
         public string Name { get; set; }
         public string Email { get; set; }
         public short Role { get; set; }
+        public int Salary { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ZipCode { get; set; }
 
-        public void Update(string name, string email, EmployerRole role)
+        public void Update(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
-            ValidaCategoria(name, email, role);
+            ValidaCategoria(name, email, role, salary, phoneNumber, zipCode);
         }
-        private void ValidaCategoria(string name, string email, EmployerRole role)
+        private void ValidaCategoria(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
             if (string.IsNullOrEmpty(name))
                 throw new InvalidOperationException("O nome é inválido");
@@ -32,6 +38,12 @@ namespace OniHealth.Domain.Models
 
             if (role <= 0)
                 throw new InvalidOperationException("O cargo é inválido");
+
+            if (string.IsNullOrEmpty(phoneNumber))
+                throw new InvalidOperationException("O número de telefone é inválido");
+
+            if (string.IsNullOrEmpty(zipCode))
+                throw new InvalidOperationException("O CEP é inválido");
         }
     }
 }

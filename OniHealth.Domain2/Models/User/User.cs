@@ -6,7 +6,7 @@ namespace OniHealth.Domain.Models
     {
         public User(){}
 
-        public User(string firstName, string lastName, string userName, string password, string email, DateTime birthDate)
+        public User(string firstName, string lastName, string userName, string password, string email, DateTime birthDate, short? isLogged = 0)
         {
             ValidaCategoria(firstName, lastName, userName, password, email, birthDate);
             FirstName = firstName;
@@ -15,6 +15,7 @@ namespace OniHealth.Domain.Models
             Password = password;
             Email = email;
             BirthDate = birthDate;
+            IsLogged = isLogged;
         }
 
         public string FirstName { get; set; }
@@ -23,6 +24,7 @@ namespace OniHealth.Domain.Models
         public string Password { get; set; }
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
+        public short? IsLogged { get; set; }
 
         public void Update(string firstName, string lastName, string userName, string password, string email, DateTime birthDate)
         {
