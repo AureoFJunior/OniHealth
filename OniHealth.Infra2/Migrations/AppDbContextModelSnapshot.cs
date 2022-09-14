@@ -76,8 +76,8 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<short>("Role")
-                        .HasColumnType("smallint");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Salary")
                         .HasColumnType("integer");
@@ -88,7 +88,26 @@ namespace OniHealth.Infra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Role");
+
                     b.ToTable("Employer");
+                });
+
+            modelBuilder.Entity("OniHealth.Domain.Models.Roles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("OniHealth.Domain.Models.User", b =>
@@ -128,6 +147,22 @@ namespace OniHealth.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("OniHealth.Domain.Models.Employer", b =>
+                {
+                    b.HasOne("OniHealth.Domain.Models.Roles", "Roles")
+                        .WithMany("Employer")
+                        .HasForeignKey("Role")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("OniHealth.Domain.Models.Roles", b =>
+                {
+                    b.Navigation("Employer");
                 });
 #pragma warning restore 612, 618
         }

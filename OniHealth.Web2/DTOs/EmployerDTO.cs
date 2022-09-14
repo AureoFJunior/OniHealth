@@ -13,6 +13,15 @@ namespace OniHealth.Web.DTOs
         public string Email { get; set; }
 
         [Required]
-        public short Role { get; set; }
+        public int Role { get; set; }
+
+        [Required]
+        public int Salary { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        public string ZipCode { get; set; }
     }
 }

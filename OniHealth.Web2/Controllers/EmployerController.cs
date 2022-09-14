@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace OniHealth.Web.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class EmployerController : Controller
     {
         private readonly EmployerService _employerService;
@@ -35,7 +35,8 @@ namespace OniHealth.Web.Controllers
             {
                 IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
 
-                IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Name = x.Name, Email = x.Email, Role = x.Role });
+                IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Name = x.Name, Email = x.Email, Role = x.Role, 
+                    Salary = x.Salary, PhoneNumber = x.PhoneNumber, ZipCode = x.ZipCode });
 
                 if (!employer.Any())
                     return NotFound(new { message = $"Funcionários não encontrados." });

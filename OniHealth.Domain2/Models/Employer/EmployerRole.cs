@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OniHealth.Domain.Models
 {
-    public enum EmployerRole : short
+    public enum EmployerRole : int
     {
         Intern = 1,
         Assistant = 2,
