@@ -13,7 +13,7 @@ namespace OniHealth.Domain.Models
             ValidaCategoria(name, email, role, salary, phoneNumber, zipCode);
             Name = name;
             Email = email;
-            Role = (short)role;
+            Role = (int) role;
             Salary = salary;
             PhoneNumber = phoneNumber;
             ZipCode = zipCode;
@@ -24,11 +24,12 @@ namespace OniHealth.Domain.Models
 
         [ForeignKey(nameof(Roles))]
         public int Role { get; set; }
+        public virtual Roles Roles { get; set; }
 
         public int Salary { get; set; }
         public string PhoneNumber { get; set; }
         public string ZipCode { get; set; }
-        public virtual Roles Roles { get; set; }
+        
 
         public void Update(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {

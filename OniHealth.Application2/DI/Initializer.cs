@@ -14,13 +14,14 @@ namespace OniHealth.Application.DI
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conection));
 
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
-            services.AddScoped(typeof(IRepository<Roles>), typeof(RolesService));
+            //services.AddScoped(typeof(IRepository<Roles>), typeof(RolesRepository));
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IRepositoryRoles), typeof(RolesRepository));
 
             services.AddScoped(typeof(EmployerService));
             services.AddScoped(typeof(RolesService));
-            services.AddScoped(typeof(RolesRepository));
+            //services.AddScoped(typeof(RolesRepository));
             services.AddScoped(typeof(TokenService));
             services.AddScoped(typeof(UserService));
 

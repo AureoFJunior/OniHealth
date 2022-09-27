@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Context;
 
 namespace OniHealth.Infra.Repositories
 {
-    public class RolesRepository : Repository<Roles>
+    public class RolesRepository : Repository<Roles>, IRepositoryRoles
     {
         private readonly UnitOfWork unitOfWork;
         public RolesRepository(AppDbContext context) : base(context)

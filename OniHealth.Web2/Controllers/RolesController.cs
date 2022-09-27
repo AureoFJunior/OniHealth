@@ -16,10 +16,10 @@ namespace OniHealth.Web.Controllers
     public class RolesController : Controller
     {
         private readonly RolesService _rolesService;
-        private readonly RolesRepository _rolesRepository;
+        private readonly IRepositoryRoles _rolesRepository;
 
         public RolesController(RolesService rolesService,
-            RolesRepository rolesRepository)
+            IRepositoryRoles rolesRepository)
         {
             _rolesService = rolesService;
             _rolesRepository = rolesRepository;
@@ -92,11 +92,12 @@ namespace OniHealth.Web.Controllers
         /// <param name="roles">Roles's to be added</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddRoles([FromBody] Roles roles)
+        public async Task<IActionResult> AddRoles([FromBody] RolesDTO rolesDTO)
         {
             try
             {
-                Roles createdRoles = await _rolesService.CreateAsync(roles);
+                Roles role = new Roles() { Id = rolesDTO.Id, Name = rolesDTO.Name };
+                Roles createdRoles = await _rolesService.CreateAsync(role);
 
                 return Ok(createdRoles);
 
@@ -109,11 +110,12 @@ namespace OniHealth.Web.Controllers
         /// <param name="roles">Roles's to be updated.</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateRoles([FromBody] Roles roles)
+        public async Task<IActionResult> UpdateRoles([FromBody] RolesDTO rolesDTO)
         {
             try
             {
-                Roles updatedRoles = _rolesService.Update(roles);
+                Roles role = new Roles() { Id = rolesDTO.Id, Name = rolesDTO.Name };
+                Roles updatedRoles = _rolesService.Update(role);
                 return Ok(updatedRoles);
 
             }
