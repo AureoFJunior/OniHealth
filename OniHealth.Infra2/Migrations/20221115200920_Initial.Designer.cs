@@ -12,7 +12,7 @@ using OniHealth.Infra.Context;
 namespace OniHealth.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221112161724_Initial")]
+    [Migration("20221115200920_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
