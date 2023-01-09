@@ -97,8 +97,8 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuários não encontrados" }); }
-            catch (Exception ex) { return Problem($"Erro ao buscar registros de Usuários: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Users not found." }); }
+            catch (Exception ex) { return Problem($"Error at users search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace OniHealth.Web.Controllers
                 User user = await _userRepository.GetByIdAsync(id);
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={id} não encontrado" }); }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de usuário: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={Id} was not found." }); }
+            catch (Exception ex) { return Problem($"Error at user search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário logado não encontrado" }); }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de usuário logado: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Logged user was not found." }); }
+            catch (Exception ex) { return Problem($"Error at logged user search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -150,8 +150,8 @@ namespace OniHealth.Web.Controllers
                 User createdUser = await _userService.CreateAsync(user);
                 return Ok(createdUser);
             }
-            catch (ConflictDatabaseException ex) { return Conflict(new { message = $"Usuário {user.UserName} já existe na base de dados" }); }
-            catch (Exception ex) { return Problem($"Erro ao criar registro de Usuário: {ex.Message}"); }
+            catch (ConflictDatabaseException ex) { return Conflict(new { message = $"User {user.UserName} already exists in the database" }); }
+            catch (Exception ex) { return Problem($"Error at user creation: {ex.Message}"); }
         }
 
         /// <summary>
@@ -167,8 +167,8 @@ namespace OniHealth.Web.Controllers
                 User updatedUser = _userService.Update(user);
                 return Ok(updatedUser);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={user.Id} não encontrado" }); }
-            catch (Exception ex) { return Problem($"Erro ao atualizar registro de Usuário: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={user.Id} was not found." }); }
+            catch (Exception ex) { return Problem($"Error at user update: {ex.Message}"); }
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace OniHealth.Web.Controllers
                 User user = _userService.Delete(id);
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Usuário de id={id} não encontrado" }); }
-            catch (Exception ex) { return Problem($"Erro ao remover registro de Usuário: {ex.Message}"); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={Id} was not found." }); }
+            catch (Exception ex) { return Problem($"Error while deleting user: {ex.Message}"); }
         }
     }
 }

@@ -39,11 +39,11 @@ namespace OniHealth.Web.Controllers
                 IEnumerable<RolesDTO> roles = roless.Where(x => x != null).Select(x => new RolesDTO { Id = x.Id, Name = x.Name });
 
                 if (!roles.Any())
-                    return NotFound(new { message = $"Cargos não encontrados." });
+                    return NotFound(new { message = $"Roles not found." });
 
                 return Ok(roles);
 
-            }catch(Exception ex) { return Problem($"Erro ao buscar registros de Cargos: {ex.Message}"); }
+            }catch(Exception ex) { return Problem($"Error at roles search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -59,11 +59,11 @@ namespace OniHealth.Web.Controllers
                 Roles roles = await _rolesRepository.GetByIdAsync(id);
                 if (roles == null)
                 {
-                    return NotFound(new { message = $"Cargo de id={id} não encontrado" });
+                    return NotFound(new { message = $"The role with ID={id} was not found." });
                 }
                 return Ok(roles);
             }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de Cargo: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -79,17 +79,17 @@ namespace OniHealth.Web.Controllers
                 string roleName= await _rolesRepository.GetNameByIdAsync(id);
                 if (String.IsNullOrEmpty(roleName))
                 {
-                    return NotFound(new { message = $"Cargo de id={id} não encontrado" });
+                    return NotFound(new { message = $"The role with ID={id} was not found." });
                 }
                 return Ok(roleName);
             }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de Cargo: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
         }
 
         /// <summary>
         /// Add a new roles
         /// </summary>
-        /// <param name="roles">Roles's to be added</param>
+        /// <param name="rolesDTO">Roles's to be added</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddRoles([FromBody] RolesDTO rolesDTO)
@@ -101,13 +101,13 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(createdRoles);
 
-            } catch (Exception ex){ return Problem($"Erro ao criar registro de Cargo: {ex.Message}");}
+            } catch (Exception ex){ return Problem($"Error at role creation: {ex.Message}");}
         }
 
         /// <summary>
         /// Update an roles
         /// </summary>
-        /// <param name="roles">Roles's to be updated.</param>
+        /// <param name="rolesDTO">Roles's to be updated.</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> UpdateRoles([FromBody] RolesDTO rolesDTO)
@@ -119,7 +119,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(updatedRoles);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao atualizar registro de Cargo: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role update: {ex.Message}"); }
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(roles);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao remover registro de Cargo: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error while deleting role: {ex.Message}"); }
         }
     }
 }

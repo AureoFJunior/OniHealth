@@ -26,7 +26,7 @@ namespace OniHealth.Domain.Models
 
                 throw new ConflictDatabaseException("User already exists.");
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
         public User Update(User user)
@@ -44,7 +44,7 @@ namespace OniHealth.Domain.Models
 
                 throw new NotFoundDatabaseException("User don't exists yet.");
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
         public User Delete(int id)
@@ -61,7 +61,7 @@ namespace OniHealth.Domain.Models
                 }
                 throw new NotFoundDatabaseException("User don't exists yet.");
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
     }
 }
