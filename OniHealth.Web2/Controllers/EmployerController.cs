@@ -103,7 +103,7 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Delete an employer
         /// </summary>
-        /// <param name="id">Employer's Id</param>
+        /// <param name="id">Employer's ID</param>
         /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteEmployer(int id)
