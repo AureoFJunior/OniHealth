@@ -114,7 +114,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(employer);
 
             }
-            catch (Exception ex) { return Problem($"Errorr while deleting employee: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Erro ao remover registro de Funcionário: {ex.Message}"); }
         }
     }
 }
