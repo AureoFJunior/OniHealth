@@ -26,7 +26,7 @@ namespace OniHealth.Infra.Repositories
 
                 throw new NotFoundDatabaseException("User not found.");
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
 
         public async override Task<IEnumerable<User>> GetAllAsync()
@@ -40,7 +40,7 @@ namespace OniHealth.Infra.Repositories
 
                 throw new NotFoundDatabaseException("User not found.");
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception ex) { throw; }
         }
     }
 }

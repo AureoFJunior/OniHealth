@@ -39,11 +39,11 @@ namespace OniHealth.Web.Controllers
                     Salary = x.Salary, PhoneNumber = x.PhoneNumber, ZipCode = x.ZipCode });
 
                 if (!employer.Any())
-                    return NotFound(new { message = $"Funcionários não encontrados." });
+                    return NotFound(new { message = $"Employees not found." });
 
                 return Ok(employer);
 
-            }catch(Exception ex) { return Problem($"Erro ao buscar registros de Funcionários: {ex.Message}"); }
+            }catch(Exception ex) { return Problem($"Error at employees search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -59,11 +59,11 @@ namespace OniHealth.Web.Controllers
                 Employer employer = await _employerRepository.GetByIdAsync(id);
                 if (employer == null)
                 {
-                    return NotFound(new { message = $"Funcionário de id={id} não encontrado" });
+                    return NotFound(new { message = $"Employee with the ID={id} wat not found" });
                 }
                 return Ok(employer);
             }
-            catch (Exception ex) { return Problem($"Erro ao buscar registro de Funcionário: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at employee search: {ex.Message}"); }
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(createdEmployer);
 
-            } catch (Exception ex){ return Problem($"Erro ao criar registro de Funcionário: {ex.Message}");}
+            } catch (Exception ex){ return Problem($"Error at employee creation: {ex.Message}");}
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(updatedEmployer);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao atualizar registro de Funcionário: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at employee update: {ex.Message}"); }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(employer);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao remover registro de Funcionário: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Errorr while deleting employee: {ex.Message}"); }
         }
     }
 }
