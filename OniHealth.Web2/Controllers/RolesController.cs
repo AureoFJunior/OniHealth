@@ -87,6 +87,26 @@ namespace OniHealth.Web.Controllers
         }
 
         /// <summary>
+        /// Get the role's name by employee.
+        /// </summary>
+        /// <param name="employeeId">Id of the employee</param>
+        /// <returns>The role's name that match with the employeeId parameter.</returns>
+        [HttpGet("{employeeId}")]
+        public async Task<IActionResult> GetRoleNameByEmployee(int employeeId)
+        {
+            try
+            {
+                string roleName = await _rolesRepository.GetNameByEmployerAsync(employeeId);
+                if (String.IsNullOrEmpty(roleName))
+                {
+                    return NotFound(new { message = $"The role with ID={employeeId} was not found." });
+                }
+                return Ok(roleName);
+            }
+            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+        }
+
+        /// <summary>
         /// Add a new roles
         /// </summary>
         /// <param name="rolesDTO">Roles's to be added</param>

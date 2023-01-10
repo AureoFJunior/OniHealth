@@ -16,7 +16,7 @@ namespace OniHealth.Infra.Repositories
 
         public async override Task<Employer> GetByIdAsync(int id)
         {
-            var query = _context.Set<Employer>().Where(e => e.Id == id);
+            var query = _context.Set<Employer>().Where(e => e.Id == id).AsNoTracking();
 
             if (await query.AnyAsync())
                 return await query.FirstOrDefaultAsync();
@@ -28,7 +28,7 @@ namespace OniHealth.Infra.Repositories
         {
             var query = _context.Set<Employer>();
 
-            return await query.AnyAsync() ? await query.ToListAsync() : new List<Employer>();
+            return await query.AnyAsync() ? await query.AsNoTracking().ToListAsync() : new List<Employer>();
         }
     }
 }

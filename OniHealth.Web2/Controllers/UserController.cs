@@ -114,7 +114,7 @@ namespace OniHealth.Web.Controllers
                 User user = await _userRepository.GetByIdAsync(id);
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={Id} was not found." }); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
             catch (Exception ex) { return Problem($"Error at user search: {ex.Message}"); }
         }
 
@@ -184,7 +184,7 @@ namespace OniHealth.Web.Controllers
                 User user = _userService.Delete(id);
                 return Ok(user);
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={Id} was not found." }); }
+            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
             catch (Exception ex) { return Problem($"Error while deleting user: {ex.Message}"); }
         }
     }

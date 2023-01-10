@@ -19,7 +19,7 @@ namespace OniHealth.Infra.Repositories
         {
             try
             {
-                var query = _context.Set<User>().Where(e => e.Id == id);
+                var query = _context.Set<User>().Where(e => e.Id == id).AsNoTracking();
 
                 if (await query.AnyAsync())
                     return await query.FirstOrDefaultAsync();
@@ -33,7 +33,7 @@ namespace OniHealth.Infra.Repositories
         {
             try
             {
-                var query = _context.Set<User>();
+                var query = _context.Set<User>().AsNoTracking();
 
                 if (await query.AnyAsync())
                     return await query.ToListAsync();

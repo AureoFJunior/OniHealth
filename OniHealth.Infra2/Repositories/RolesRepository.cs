@@ -17,7 +17,7 @@ namespace OniHealth.Infra.Repositories
 
         public async override Task<Roles> GetByIdAsync(int id)
         {
-            var query = _context.Set<Roles>().Where(e => e.Id == id);
+            var query = _context.Set<Roles>().Where(e => e.Id == id).AsNoTracking();
 
             if (await query.AnyAsync())
                 return await query.FirstOrDefaultAsync();
@@ -29,12 +29,22 @@ namespace OniHealth.Infra.Repositories
         {
             var query = _context.Set<Roles>();
 
-            return await query.AnyAsync() ? await query.ToListAsync() : new List<Roles>();
+            return await query.AnyAsync() ? await query.AsNoTracking().ToListAsync() : new List<Roles>();
         }
 
         public async Task<string> GetNameByIdAsync(int id)
         {
-            var query = _context.Set<Roles>().Where(e => e.Id == id).Select(x => x.Name);
+            var query = _context.Set<Roles>().Where(e => e.Id == id).Select(x => x.Name).AsNoTracking();
+
+            if (await query.AnyAsync())
+                return await query.FirstOrDefaultAsync();
+
+            return null;
+        }
+
+        public async Task<string> GetNameByEmployerAsync(int employerId)
+        {
+            var query = _context.Set<Roles>().Join(_context.Set<Employer>(), role => role.Id,employer => employerId, (role, employer) => role.Name).AsNoTracking();
 
             if (await query.AnyAsync())
                 return await query.FirstOrDefaultAsync();
