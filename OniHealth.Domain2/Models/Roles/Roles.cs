@@ -8,7 +8,7 @@ namespace OniHealth.Domain.Models
 
         public Roles(string name)
         {
-            ValidaCategoria(name);
+            ValidateCategory(name);
             Name = name;
         }
 
@@ -18,12 +18,12 @@ namespace OniHealth.Domain.Models
 
         public void Update(string name)
         {
-            ValidaCategoria(name);
+            ValidateCategory(name);
         }
-        private void ValidaCategoria(string name)
+        private void ValidateCategory(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new InvalidOperationException("O nome do cargo é inválido");
+                throw new InvalidOperationException("The role's name is invalid");
         }
     }
 }

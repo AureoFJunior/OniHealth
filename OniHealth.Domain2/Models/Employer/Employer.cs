@@ -10,7 +10,7 @@ namespace OniHealth.Domain.Models
 
         public Employer(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
-            ValidaCategoria(name, email, role, salary, phoneNumber, zipCode);
+            ValidateCategory(name, email, role, salary, phoneNumber, zipCode);
             Name = name;
             Email = email;
             Role = (int) role;
@@ -33,24 +33,24 @@ namespace OniHealth.Domain.Models
 
         public void Update(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
-            ValidaCategoria(name, email, role, salary, phoneNumber, zipCode);
+            ValidateCategory(name, email, role, salary, phoneNumber, zipCode);
         }
-        private void ValidaCategoria(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
+        private void ValidateCategory(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
             if (string.IsNullOrEmpty(name))
-                throw new InvalidOperationException("O nome é inválido");
+                throw new InvalidOperationException("The name is invalid");
 
             if (string.IsNullOrEmpty(email))
-                throw new InvalidOperationException("O email é inválido");
+                throw new InvalidOperationException("The email is invalid");
 
             if (role <= 0)
-                throw new InvalidOperationException("O cargo é inválido");
+                throw new InvalidOperationException("The role is invalid");
 
             if (string.IsNullOrEmpty(phoneNumber))
-                throw new InvalidOperationException("O número de telefone é inválido");
+                throw new InvalidOperationException("The phone number is invalid");
 
             if (string.IsNullOrEmpty(zipCode))
-                throw new InvalidOperationException("O CEP é inválido");
+                throw new InvalidOperationException("The CEP is invalid");
         }
     }
 }

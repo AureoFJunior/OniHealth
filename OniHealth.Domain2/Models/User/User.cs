@@ -8,7 +8,7 @@ namespace OniHealth.Domain.Models
 
         public User(string firstName, string lastName, string userName, string password, string email, DateTime birthDate, short? isLogged = 0)
         {
-            ValidaCategoria(firstName, lastName, userName, password, email, birthDate);
+            ValidateCategory(firstName, lastName, userName, password, email, birthDate);
             FirstName = firstName;
             LastName = lastName;
             UserName = userName;
@@ -28,24 +28,24 @@ namespace OniHealth.Domain.Models
 
         public void Update(string firstName, string lastName, string userName, string password, string email, DateTime birthDate)
         {
-            ValidaCategoria(firstName, lastName, userName, password, email, birthDate);
+            ValidateCategory(firstName, lastName, userName, password, email, birthDate);
         }
-        private void ValidaCategoria(string firstName, string lastName, string userName, string password, string email, DateTime birthDate)
+        private void ValidateCategory(string firstName, string lastName, string userName, string password, string email, DateTime birthDate)
         {
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
-                throw new InvalidOperationException("O nome é inválido");
+                throw new InvalidOperationException("The name is invalid");
 
             if (string.IsNullOrEmpty(email))
-                throw new InvalidOperationException("O email é inválido");
+                throw new InvalidOperationException("The email is invalid");
 
             if (string.IsNullOrEmpty(userName))
-                throw new InvalidOperationException("O nome de usuário é inválido");
+                throw new InvalidOperationException("The name de usuário is invalid");
 
             if (string.IsNullOrEmpty(password))
-                throw new InvalidOperationException("A senha é inválida");
+                throw new InvalidOperationException("The password is invalid");
 
             if (birthDate == DateTime.MinValue)
-                throw new InvalidOperationException("A data de nascimento é inválida");
+                throw new InvalidOperationException("Birth date is invalid");
         }
     }
 }

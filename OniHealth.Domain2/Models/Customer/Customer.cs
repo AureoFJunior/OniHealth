@@ -8,7 +8,7 @@ namespace OniHealth.Domain.Models
 
         public Customer(string name, string email, DateTime birthDate, short signedPlan, bool isDependent)
         {
-            ValidaCategoria(name, email, birthDate, signedPlan, isDependent );
+            ValidateCategory(name, email, birthDate, signedPlan, isDependent );
             Name = name;
             Email = email;
             BirthDate = birthDate;  
@@ -25,24 +25,24 @@ namespace OniHealth.Domain.Models
 
         public void Update(string name, string email, DateTime birthDate, short signedPlan, bool isDependent)
         {
-            ValidaCategoria(name, email, birthDate, signedPlan, isDependent);
+            ValidateCategory(name, email, birthDate, signedPlan, isDependent);
         }
-        private void ValidaCategoria(string name, string email, DateTime birthDate, short signedPlan, bool isDependent)
+        private void ValidateCategory(string name, string email, DateTime birthDate, short signedPlan, bool isDependent)
         {
             if (string.IsNullOrEmpty(name))
-                throw new InvalidOperationException("O nome é inválido");
+                throw new InvalidOperationException("The name is invalid");
 
             if (string.IsNullOrEmpty(email))
-                throw new InvalidOperationException("O email é inválido");
+                throw new InvalidOperationException("The email is invalid");
 
             if (DateTime.MinValue == birthDate)
-                throw new InvalidOperationException("A data de nascimento é inválida");
+                throw new InvalidOperationException("Birth date is invalid");
 
             if (signedPlan == null || signedPlan <= 0)
-                throw new InvalidOperationException("O plano é inválido");
+                throw new InvalidOperationException("The plan is invalid");
                 
             if (isDependent == null)
-                throw new InvalidOperationException("A dependência do cliente é inválida");
+                throw new InvalidOperationException("The customer's dependency is invalid");
         }
     }
 }
