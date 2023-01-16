@@ -3,7 +3,7 @@ using System.Linq;
 using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +73,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(loggedUser);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao autenticar o usuário: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Erro ao autenticar o usuário"); }
         }
 
         private static void GenerateToken(User user, out string token, out string refreshToken)
@@ -98,7 +98,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(user);
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Users not found." }); }
-            catch (Exception ex) { return Problem($"Error at users search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at users search"); }
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(user);
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at user search"); }
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(user);
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Logged user was not found." }); }
-            catch (Exception ex) { return Problem($"Error at logged user search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at logged user search"); }
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(createdUser);
             }
             catch (ConflictDatabaseException ex) { return Conflict(new { message = $"User {user.UserName} already exists in the database" }); }
-            catch (Exception ex) { return Problem($"Error at user creation: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at user creation"); }
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(updatedUser);
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={user.Id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user update: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at user update"); }
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(user);
             }
             catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error while deleting user: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error while deleting user"); }
         }
     }
 }

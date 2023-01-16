@@ -13,6 +13,8 @@ namespace OniHealth.Application.DI
         {
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conection));
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

@@ -3,11 +3,12 @@ using System.Linq;
 using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using OniHealth.Infra.Repositories;
+using AutoMapper;
 
 namespace OniHealth.Web.Controllers
 {
@@ -17,12 +18,16 @@ namespace OniHealth.Web.Controllers
     {
         private readonly RolesService _rolesService;
         private readonly IRepositoryRoles _rolesRepository;
+        private readonly IMapper _mapper;
+
 
         public RolesController(RolesService rolesService,
-            IRepositoryRoles rolesRepository)
+            IRepositoryRoles rolesRepository,
+            IMapper mapper)
         {
             _rolesService = rolesService;
             _rolesRepository = rolesRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -34,16 +39,16 @@ namespace OniHealth.Web.Controllers
         {
             try
             {
-                IEnumerable<Roles> roless = await _rolesRepository.GetAllAsync();
+                IEnumerable<Roles> roles = await _rolesRepository.GetAllAsync();
 
-                IEnumerable<RolesDTO> roles = roless.Where(x => x != null).Select(x => new RolesDTO { Id = x.Id, Name = x.Name });
+                IEnumerable<RolesDTO> rolesDTO = _mapper.Map<IEnumerable<RolesDTO>>(roles);
 
-                if (!roles.Any())
+                if (!rolesDTO.Any())
                     return NotFound(new { message = $"Roles not found." });
 
-                return Ok(roles);
+                return Ok(rolesDTO);
 
-            }catch(Exception ex) { return Problem($"Error at roles search: {ex.Message}"); }
+            }catch(Exception ex) { return Problem($"Error at roles search"); }
         }
 
         /// <summary>
@@ -63,7 +68,7 @@ namespace OniHealth.Web.Controllers
                 }
                 return Ok(roles);
             }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role search"); }
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace OniHealth.Web.Controllers
                 }
                 return Ok(roleName);
             }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role search"); }
         }
 
         /// <summary>
@@ -103,7 +108,7 @@ namespace OniHealth.Web.Controllers
                 }
                 return Ok(roleName);
             }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role search"); }
         }
 
         /// <summary>
@@ -121,7 +126,7 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(createdRoles);
 
-            } catch (Exception ex){ return Problem($"Error at role creation: {ex.Message}");}
+            } catch (Exception ex){ return Problem($"Error at role creation");}
         }
 
         /// <summary>
@@ -139,7 +144,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(updatedRoles);
 
             }
-            catch (Exception ex) { return Problem($"Error at role update: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at role update"); }
         }
 
         /// <summary>
@@ -156,7 +161,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(roles);
 
             }
-            catch (Exception ex) { return Problem($"Error while deleting role: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error while deleting role"); }
         }
     }
 }

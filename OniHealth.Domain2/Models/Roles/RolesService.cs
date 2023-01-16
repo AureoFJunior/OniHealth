@@ -21,8 +21,7 @@ namespace OniHealth.Domain.Models
                 includedRoles = await _employerRepository.CreateAsync(roles);
                 return includedRoles;
             }
-            else
-                return null;
+            return null;
         }
 
         public Roles Update(Roles roles)
@@ -35,8 +34,7 @@ namespace OniHealth.Domain.Models
                 updatedRoles = _employerRepository.Update(roles);
                 return updatedRoles;
             }
-            else
-                return null;
+            return null;
         }
 
         public Roles Delete(int id)
@@ -49,8 +47,7 @@ namespace OniHealth.Domain.Models
                 deletedRoles = _employerRepository.Delete(roles);
                 return deletedRoles;
             }
-            else
-                return null;
+            return null;
         }
     }
 }

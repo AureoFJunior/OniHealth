@@ -24,7 +24,7 @@ namespace OniHealth.Domain.Models
                     return includedUser;
                 }
 
-                throw new ConflictDatabaseException("User already exists.");
+                throw new ConflictDatabaseException();
             }
             catch (Exception ex) { throw; }
         }
@@ -42,7 +42,7 @@ namespace OniHealth.Domain.Models
                     return updatedUser;
                 }
 
-                throw new NotFoundDatabaseException("User don't exists yet.");
+                throw new NotFoundDatabaseException();
             }
             catch (Exception ex) { throw; }
         }
@@ -59,7 +59,7 @@ namespace OniHealth.Domain.Models
                     deletedUser = _userRepository.Delete(user);
                     return deletedUser;
                 }
-                throw new NotFoundDatabaseException("User don't exists yet.");
+                throw new NotFoundDatabaseException();
             }
             catch (Exception ex) { throw; }
         }

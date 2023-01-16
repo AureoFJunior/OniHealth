@@ -3,7 +3,7 @@ using System.Linq;
 using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
@@ -43,7 +43,7 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(employer);
 
-            }catch(Exception ex) { return Problem($"Error at employees search: {ex.Message}"); }
+            }catch(Exception ex) { return Problem($"Error at employees search"); }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace OniHealth.Web.Controllers
                 }
                 return Ok(employer);
             }
-            catch (Exception ex) { return Problem($"Error at employee search: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at employee search"); }
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace OniHealth.Web.Controllers
 
                 return Ok(createdEmployer);
 
-            } catch (Exception ex){ return Problem($"Error at employee creation: {ex.Message}");}
+            } catch (Exception ex){ return Problem($"Error at employee creation");}
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(updatedEmployer);
 
             }
-            catch (Exception ex) { return Problem($"Error at employee update: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Error at employee update"); }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace OniHealth.Web.Controllers
                 return Ok(employer);
 
             }
-            catch (Exception ex) { return Problem($"Erro ao remover registro de Funcionário: {ex.Message}"); }
+            catch (Exception ex) { return Problem($"Erro ao remover registro de Funcionário"); }
         }
     }
 }
