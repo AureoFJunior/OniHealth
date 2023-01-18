@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using OniHealth.Domain.DTOs;
@@ -8,6 +7,8 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using OniHealth.Domain;
+using OniHealth.Domain.Interfaces.Repositories;
+using AutoMapper;
 
 namespace OniHealth.Web.Controllers
 {
@@ -17,12 +18,15 @@ namespace OniHealth.Web.Controllers
     {
         private readonly UserService _userService;
         private readonly IRepository<User> _userRepository;
+        private readonly IMapper _mapper;
 
         public UserController(UserService userService,
-            IRepository<User> userRepository)
+            IRepository<User> userRepository,
+            IMapper mapper)
         {
             _userService = userService;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -35,8 +39,7 @@ namespace OniHealth.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LogInto(string userName, string password)
         {
-            try
-            {
+
                 List<User> users = _userRepository.GetAll().ToList();
 
                 foreach(User userUpdate in users)
@@ -47,14 +50,11 @@ namespace OniHealth.Web.Controllers
 
                 User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
 
-                if (user == null)
-                    return NotFound(new { message = $"Usuários não encontrados." });
-
                 string token, refreshToken;
                 GenerateToken(user, out token, out refreshToken);
 
-                if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
-                    return Problem($"Não foi possível autenticar o usuário {user.UserName}.");
+            if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
+                throw new Exception();
 
                 user.IsLogged = 1;
                 _userService.Update(user);
@@ -71,9 +71,6 @@ namespace OniHealth.Web.Controllers
                 };
 
                 return Ok(loggedUser);
-
-            }
-            catch (Exception ex) { return Problem($"Erro ao autenticar o usuário"); }
         }
 
         private static void GenerateToken(User user, out string token, out string refreshToken)
@@ -90,15 +87,9 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            try
-            {
-                IEnumerable<User> users = await _userRepository.GetAllAsync();
-                IEnumerable<UserDTO> user = users.Where(x => x != null).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" });
-
-                return Ok(user);
-            }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Users not found." }); }
-            catch (Exception ex) { return Problem($"Error at users search"); }
+             IEnumerable<User> users = await _userRepository.GetAllAsync();
+             IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -109,13 +100,9 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            try
-            {
-                User user = await _userRepository.GetByIdAsync(id);
-                return Ok(user);
-            }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user search"); }
+            User user = await _userRepository.GetByIdAsync(id);
+            IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(user);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -125,50 +112,38 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IsLogged()
         {
-            try
-            {
                 IEnumerable<User> users = await _userRepository.GetAllAsync();
                 UserDTO user = users.Where(x => x.IsLogged == 1).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" }).FirstOrDefault();
-
                 return Ok(user);
-            }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Logged user was not found." }); }
-            catch (Exception ex) { return Problem($"Error at logged user search"); }
         }
 
         /// <summary>
         /// Add a new user
         /// </summary>
-        /// <param name="user">User to be added</param>
+        /// <param name="userDTO">User to be added</param>
         /// <returns>The added user</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
-            try
-            {
-                User createdUser = await _userService.CreateAsync(user);
-                return Ok(createdUser);
-            }
-            catch (ConflictDatabaseException ex) { return Conflict(new { message = $"User {user.UserName} already exists in the database" }); }
-            catch (Exception ex) { return Problem($"Error at user creation"); }
+            User user = _mapper.Map<User>(userDTO);
+            User createdUser = await _userService.CreateAsync(user);
+            userDTO = _mapper.Map<UserDTO>(createdUser);
+            return Ok(userDTO);
         }
 
         /// <summary>
         /// Update an user
         /// </summary>
-        /// <param name="user">User to be updated</param>
+        /// <param name="userDTO">User to be updated</param>
         /// <returns>The updated user</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
         {
-            try
-            {
-                User updatedUser = _userService.Update(user);
-                return Ok(updatedUser);
-            }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={user.Id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user update"); }
+            User user = _mapper.Map<User>(userDTO);
+            User updatedUser = _userService.Update(user);
+            userDTO = _mapper.Map<UserDTO>(updatedUser);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -179,13 +154,9 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            try
-            {
-                User user = _userService.Delete(id);
-                return Ok(user);
-            }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error while deleting user"); }
+            User user = _userService.Delete(id);
+            UserDTO userDTO = _mapper.Map<UserDTO>(user);
+            return Ok(userDTO);
         }
     }
 }

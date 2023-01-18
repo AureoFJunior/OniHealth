@@ -1,8 +1,8 @@
-using OniHealth.Domain.Interfaces;
+using OniHealth.Domain.Interfaces.Repositories;
 
 namespace OniHealth.Domain.Models
 {
-    public class EmployerService
+    public class EmployerService : IEmployerService<Employer>
     {
         private readonly IRepository<Employer> _employerRepository;
 

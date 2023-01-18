@@ -1,11 +1,11 @@
 using OniHealth.Domain.Models;
 using System.Collections.Generic;
 
-namespace OniHealth.Domain.Interfaces
+namespace OniHealth.Domain.Interfaces.Repositories
 {
     public interface IRepositoryRoles : IRepository<Roles>
     {
-        
+
         #region Sync
 
         #endregion
