@@ -21,5 +21,8 @@ namespace OniHealth.Web.DTOs
 
         [Required]
         public bool IsDependent { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace OniHealth.Domain.Models
 
             if (existentCustomer == null)
             {
-                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent);
+                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent, customer.PhoneNumber);
                 includedCustomer = await _customerRepository.CreateAsync(customer);
                 return includedCustomer;
             }
@@ -33,7 +33,7 @@ namespace OniHealth.Domain.Models
 
             if (customer != null)
             {
-                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent);
+                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent, customer.PhoneNumber);
                 updatedCustomer = _customerRepository.Update(customer);
                 return updatedCustomer;
             }

@@ -10,7 +10,7 @@ namespace OniHealth.Test
         public ContextFactory()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-           .UseSqlServer("Server=AMAJIKI\\SQLEXPRESS;Database=oniHealth;Trusted_Connection=True;")
+           .UseSqlServer("Server=localhost\\SQLEXPRESS;Database=oniHealth;Trusted_Connection=True;")
            .Options;
 
             // Insert seed data into the database using one instance of the context
