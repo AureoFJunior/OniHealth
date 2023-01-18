@@ -2,7 +2,7 @@ using OniHealth.Domain.Interfaces.Repositories;
 
 namespace OniHealth.Domain.Models
 {
-    public class RolesService
+    public class RolesService : IRolesService<Roles>
     {
         private readonly IRepository<Roles> _employerRepository;
 
