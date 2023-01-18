@@ -24,7 +24,7 @@ namespace OniHealth.Infra.Repositories
                 if (await query.AnyAsync())
                     return await query.FirstOrDefaultAsync();
 
-                throw new NotFoundDatabaseException("User not found.");
+                throw new NotFoundDatabaseException();
             }
             catch (Exception ex) { throw; }
         }
@@ -38,7 +38,7 @@ namespace OniHealth.Infra.Repositories
                 if (await query.AnyAsync())
                     return await query.ToListAsync();
 
-                throw new NotFoundDatabaseException("User not found.");
+                throw new NotFoundDatabaseException();
             }
             catch (Exception ex) { throw; }
         }

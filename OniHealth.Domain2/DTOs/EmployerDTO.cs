@@ -1,9 +1,8 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OniHealth.Web.DTOs
+namespace OniHealth.Domain.DTOs
 {
-    public class CustomerDTO
+    public class EmployerDTO
     {
         public int Id { get; set; }
 
@@ -14,15 +13,15 @@ namespace OniHealth.Web.DTOs
         public string Email { get; set; }
 
         [Required]
-        public DateTime BirthDate { get; set; }
+        public int Role { get; set; }
 
         [Required]
-        public short SignedPlan { get; set; }
-
-        [Required]
-        public bool IsDependent { get; set; }
+        public int Salary { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public string ZipCode { get; set; }
     }
 }

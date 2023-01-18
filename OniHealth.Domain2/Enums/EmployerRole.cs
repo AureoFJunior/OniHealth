@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OniHealth.Domain.Models
+namespace OniHealth.Domain.Enums
 {
     public enum EmployerRole : int
     {

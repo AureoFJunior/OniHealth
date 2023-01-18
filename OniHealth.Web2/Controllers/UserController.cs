@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using OniHealth.Domain;
+using OniHealth.Domain.Interfaces.Repositories;
+using AutoMapper;
+using OniHealth.Web.Config;
 
 namespace OniHealth.Web.Controllers
 {
@@ -17,12 +19,18 @@ namespace OniHealth.Web.Controllers
     {
         private readonly UserService _userService;
         private readonly IRepository<User> _userRepository;
+        private readonly IMapper _mapper;
+        private readonly IValidator _validator;
 
         public UserController(UserService userService,
-            IRepository<User> userRepository)
+            IRepository<User> userRepository,
+            IMapper mapper,
+            IValidator validator)
         {
             _userService = userService;
             _userRepository = userRepository;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         /// <summary>
@@ -35,45 +43,47 @@ namespace OniHealth.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LogInto(string userName, string password)
         {
-            try
+            List<User> users = _userRepository.GetAll().ToList();
+            if (users == null)
             {
-                List<User> users = _userRepository.GetAll().ToList();
-
-                foreach(User userUpdate in users)
-                {
-                    userUpdate.IsLogged = 0;
-                    _userService.Update(userUpdate);
-                }
-
-                User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
-
-                if (user == null)
-                    return NotFound(new { message = $"Usuários não encontrados." });
-
-                string token, refreshToken;
-                GenerateToken(user, out token, out refreshToken);
-
-                if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
-                    return Problem($"Não foi possível autenticar o usuário {user.UserName}.");
-
-                user.IsLogged = 1;
-                _userService.Update(user);
-
-                UserDTO loggedUser = new UserDTO()
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    BirthDate = user.BirthDate,
-                    Token = token,
-                    RefreshToken = refreshToken
-                };
-
-                return Ok(loggedUser);
-
+                _validator.AddMessage("User not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Erro ao autenticar o usuário: {ex.Message}"); }
+
+            foreach (User userUpdate in users)
+            {
+                userUpdate.IsLogged = 0;
+                _userService.Update(userUpdate);
+            }
+
+            User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
+            if (users == null)
+            {
+                _validator.AddMessage("User or password incorrect.");
+                return NotFound();
+            }
+
+            string token, refreshToken;
+            GenerateToken(user, out token, out refreshToken);
+
+            if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(refreshToken))
+                throw new Exception();
+
+            user.IsLogged = 1;
+            _userService.Update(user);
+
+            UserDTO loggedUser = new UserDTO()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                BirthDate = user.BirthDate,
+                Token = token,
+                RefreshToken = refreshToken
+            };
+
+            return Ok(loggedUser);
         }
 
         private static void GenerateToken(User user, out string token, out string refreshToken)
@@ -90,15 +100,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            try
+            IEnumerable<User> users = await _userRepository.GetAllAsync();
+            if (users == null)
             {
-                IEnumerable<User> users = await _userRepository.GetAllAsync();
-                IEnumerable<UserDTO> user = users.Where(x => x != null).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" });
-
-                return Ok(user);
+                _validator.AddMessage("Users not found.");
+                return NotFound();
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Users not found." }); }
-            catch (Exception ex) { return Problem($"Error at users search: {ex.Message}"); }
+
+            IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -109,13 +119,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            try
+            User user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
             {
-                User user = await _userRepository.GetByIdAsync(id);
-                return Ok(user);
+                _validator.AddMessage("User not found.");
+                return NotFound();
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user search: {ex.Message}"); }
+
+            IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(user);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -125,50 +137,51 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IsLogged()
         {
-            try
+            IEnumerable<User> users = await _userRepository.GetAllAsync();
+            if (users == null)
             {
-                IEnumerable<User> users = await _userRepository.GetAllAsync();
-                UserDTO user = users.Where(x => x.IsLogged == 1).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" }).FirstOrDefault();
-
-                return Ok(user);
+                _validator.AddMessage("User not found.");
+                return NotFound();
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"Logged user was not found." }); }
-            catch (Exception ex) { return Problem($"Error at logged user search: {ex.Message}"); }
+
+            UserDTO user = users.Where(x => x.IsLogged == 1).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" }).FirstOrDefault();
+            return Ok(user);
         }
 
         /// <summary>
         /// Add a new user
         /// </summary>
-        /// <param name="user">User to be added</param>
+        /// <param name="userDTO">User to be added</param>
         /// <returns>The added user</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
         {
-            try
-            {
-                User createdUser = await _userService.CreateAsync(user);
-                return Ok(createdUser);
-            }
-            catch (ConflictDatabaseException ex) { return Conflict(new { message = $"User {user.UserName} already exists in the database" }); }
-            catch (Exception ex) { return Problem($"Error at user creation: {ex.Message}"); }
+            User user = _mapper.Map<User>(userDTO);
+            User createdUser = await _userService.CreateAsync(user);
+            userDTO = _mapper.Map<UserDTO>(createdUser);
+            return Ok(userDTO);
         }
 
         /// <summary>
         /// Update an user
         /// </summary>
-        /// <param name="user">User to be updated</param>
+        /// <param name="userDTO">User to be updated</param>
         /// <returns>The updated user</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
         {
-            try
+            User user = _mapper.Map<User>(userDTO);
+            User updatedUser = _userService.Update(user);
+
+            if (updatedUser == null)
             {
-                User updatedUser = _userService.Update(user);
-                return Ok(updatedUser);
+                _validator.AddMessage("User not found.");
+                return NotFound();
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={user.Id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error at user update: {ex.Message}"); }
+
+            userDTO = _mapper.Map<UserDTO>(updatedUser);
+            return Ok(userDTO);
         }
 
         /// <summary>
@@ -179,13 +192,15 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            try
+            User user = _userService.Delete(id);
+            if (user == null)
             {
-                User user = _userService.Delete(id);
-                return Ok(user);
+                _validator.AddMessage("User not found.");
+                return NotFound();
             }
-            catch (NotFoundDatabaseException ex) { return NotFound(new { message = $"The user with te ID={id} was not found." }); }
-            catch (Exception ex) { return Problem($"Error while deleting user: {ex.Message}"); }
+
+            UserDTO userDTO = _mapper.Map<UserDTO>(user);
+            return Ok(userDTO);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace OniHealth.Domain.Models
         private void ValidateCategory(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new InvalidOperationException("The role's name is invalid");
+                throw new InvalidOperationException();
         }
     }
 }

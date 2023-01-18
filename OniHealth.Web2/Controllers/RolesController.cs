@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
-using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using OniHealth.Infra.Repositories;
+using AutoMapper;
+using System.Data;
+using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Web.Config;
 
 namespace OniHealth.Web.Controllers
 {
@@ -17,12 +20,19 @@ namespace OniHealth.Web.Controllers
     {
         private readonly RolesService _rolesService;
         private readonly IRepositoryRoles _rolesRepository;
+        private readonly IMapper _mapper;
+        private readonly IValidator _validator;
+
 
         public RolesController(RolesService rolesService,
-            IRepositoryRoles rolesRepository)
+            IRepositoryRoles rolesRepository,
+            IMapper mapper,
+            IValidator validator)
         {
             _rolesService = rolesService;
             _rolesRepository = rolesRepository;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         /// <summary>
@@ -32,18 +42,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoles()
         {
-            try
+            IEnumerable<Roles> roles = await _rolesRepository.GetAllAsync();
+            if (roles == null)
             {
-                IEnumerable<Roles> roless = await _rolesRepository.GetAllAsync();
+                _validator.AddMessage("Role not found.");
+                return NotFound();
+            }
 
-                IEnumerable<RolesDTO> roles = roless.Where(x => x != null).Select(x => new RolesDTO { Id = x.Id, Name = x.Name });
-
-                if (!roles.Any())
-                    return NotFound(new { message = $"Roles not found." });
-
-                return Ok(roles);
-
-            }catch(Exception ex) { return Problem($"Error at roles search: {ex.Message}"); }
+            IEnumerable<RolesDTO> rolesDTO = _mapper.Map<IEnumerable<RolesDTO>>(roles);
+            return Ok(rolesDTO);
         }
 
         /// <summary>
@@ -54,16 +61,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRole(int id)
         {
-            try
+            Roles roles = await _rolesRepository.GetByIdAsync(id);
+            if (roles == null)
             {
-                Roles roles = await _rolesRepository.GetByIdAsync(id);
-                if (roles == null)
-                {
-                    return NotFound(new { message = $"The role with ID={id} was not found." });
-                }
-                return Ok(roles);
+                _validator.AddMessage("Role not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+
+            RolesDTO role = _mapper.Map<RolesDTO>(roles);
+            return Ok(role);
         }
 
         /// <summary>
@@ -74,16 +80,8 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoleName(int id)
         {
-            try
-            {
-                string roleName= await _rolesRepository.GetNameByIdAsync(id);
-                if (String.IsNullOrEmpty(roleName))
-                {
-                    return NotFound(new { message = $"The role with ID={id} was not found." });
-                }
-                return Ok(roleName);
-            }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+            string roleName = await _rolesRepository.GetNameByIdAsync(id);
+            return Ok(roleName);
         }
 
         /// <summary>
@@ -94,16 +92,8 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{employeeId}")]
         public async Task<IActionResult> GetRoleNameByEmployee(int employeeId)
         {
-            try
-            {
-                string roleName = await _rolesRepository.GetNameByEmployerAsync(employeeId);
-                if (String.IsNullOrEmpty(roleName))
-                {
-                    return NotFound(new { message = $"The role with ID={employeeId} was not found." });
-                }
-                return Ok(roleName);
-            }
-            catch (Exception ex) { return Problem($"Error at role search: {ex.Message}"); }
+            string roleName = await _rolesRepository.GetNameByEmployerAsync(employeeId);
+            return Ok(roleName);
         }
 
         /// <summary>
@@ -114,14 +104,10 @@ namespace OniHealth.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRoles([FromBody] RolesDTO rolesDTO)
         {
-            try
-            {
-                Roles role = new Roles() { Id = rolesDTO.Id, Name = rolesDTO.Name };
-                Roles createdRoles = await _rolesService.CreateAsync(role);
-
-                return Ok(createdRoles);
-
-            } catch (Exception ex){ return Problem($"Error at role creation: {ex.Message}");}
+            Roles role = _mapper.Map<Roles>(rolesDTO);
+            Roles createdRoles = await _rolesService.CreateAsync(role);
+            rolesDTO = _mapper.Map<RolesDTO>(createdRoles);
+            return Ok(rolesDTO);
         }
 
         /// <summary>
@@ -132,14 +118,16 @@ namespace OniHealth.Web.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRoles([FromBody] RolesDTO rolesDTO)
         {
-            try
+            Roles role = _mapper.Map<Roles>(rolesDTO);
+            Roles updatedRoles = _rolesService.Update(role);
+            if (updatedRoles == null)
             {
-                Roles role = new Roles() { Id = rolesDTO.Id, Name = rolesDTO.Name };
-                Roles updatedRoles = _rolesService.Update(role);
-                return Ok(updatedRoles);
-
+                _validator.AddMessage("Role not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Error at role update: {ex.Message}"); }
+
+            rolesDTO = _mapper.Map<RolesDTO>(updatedRoles);
+            return Ok(rolesDTO);
         }
 
         /// <summary>
@@ -150,13 +138,15 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteRoles(int id)
         {
-            try
+            Roles roles = _rolesService.Delete(id);
+            if (roles == null)
             {
-                Roles roles = _rolesService.Delete(id);
-                return Ok(roles);
-
+                _validator.AddMessage("Role not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Error while deleting role: {ex.Message}"); }
+
+            RolesDTO rolesDTO = _mapper.Map<RolesDTO>(roles);
+            return Ok(rolesDTO);
         }
     }
 }

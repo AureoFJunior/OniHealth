@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
-using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using AutoMapper;
+using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Web.Config;
 
 namespace OniHealth.Web.Controllers
 {
@@ -14,14 +17,20 @@ namespace OniHealth.Web.Controllers
     [Route("api/[controller]/[action]")]
     public class EmployerController : Controller
     {
-        private readonly EmployerService _employerService;
+        private readonly IEmployerService<Employer> _employerService;
         private readonly IRepository<Employer> _employerRepository;
+        private readonly IMapper _mapper;
+        private readonly IValidator _validator;
 
-        public EmployerController(EmployerService employerService,
-            IRepository<Employer> employerRepository)
+        public EmployerController(IRepository<Employer> employerRepository,
+            IEmployerService<Employer> employerService,
+            IMapper mapper,
+            IValidator validator)
         {
             _employerService = employerService;
             _employerRepository = employerRepository;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         /// <summary>
@@ -31,19 +40,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEmployers()
         {
-            try
+            IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
+            if (employers == null)
             {
-                IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
+                _validator.AddMessage("Employees not found.");
+                return NotFound();
+            }
 
-                IEnumerable<EmployerDTO> employer = employers.Where(x => x != null).Select(x => new EmployerDTO { Id = x.Id, Name = x.Name, Email = x.Email, Role = x.Role, 
-                    Salary = x.Salary, PhoneNumber = x.PhoneNumber, ZipCode = x.ZipCode });
-
-                if (!employer.Any())
-                    return NotFound(new { message = $"Employees not found." });
-
-                return Ok(employer);
-
-            }catch(Exception ex) { return Problem($"Error at employees search: {ex.Message}"); }
+            IEnumerable<EmployerDTO> employer = _mapper.Map<IEnumerable<EmployerDTO>>(employers);
+            return Ok(employer);
         }
 
         /// <summary>
@@ -54,50 +59,49 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployer(int id)
         {
-            try
+            Employer employer = await _employerRepository.GetByIdAsync(id);
+            if (employer == null)
             {
-                Employer employer = await _employerRepository.GetByIdAsync(id);
-                if (employer == null)
-                {
-                    return NotFound(new { message = $"Employee with the ID={id} wat not found" });
-                }
-                return Ok(employer);
+                _validator.AddMessage("Employee not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Error at employee search: {ex.Message}"); }
+
+            EmployerDTO employerDTO = _mapper.Map<EmployerDTO>(employer);
+            return Ok(employerDTO);
         }
 
         /// <summary>
         /// Add a new employer
         /// </summary>
-        /// <param name="employer">Employer's to be added</param>
+        /// <param name="employerDTO">Employer's to be added</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddEmployer([FromBody] Employer employer)
+        public async Task<IActionResult> AddEmployer([FromBody] EmployerDTO employerDTO)
         {
-            try
-            {
-                Employer createdEmployer = await _employerService.CreateAsync(employer);
-
-                return Ok(createdEmployer);
-
-            } catch (Exception ex){ return Problem($"Error at employee creation: {ex.Message}");}
+            Employer employer = _mapper.Map<Employer>(employerDTO);
+            Employer createdEmployer = await _employerService.CreateAsync(employer);
+            employerDTO = _mapper.Map<EmployerDTO>(createdEmployer);
+            return Ok(employerDTO);
         }
 
         /// <summary>
         /// Update an employer
         /// </summary>
-        /// <param name="employer">Employer's to be updated.</param>
+        /// <param name="employerDTO">Employer's to be updated.</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateEmployer([FromBody] Employer employer)
+        public async Task<IActionResult> UpdateEmployer([FromBody] EmployerDTO employerDTO)
         {
-            try
+            Employer employer = _mapper.Map<Employer>(employerDTO);
+            Employer updatedEmployer = _employerService.Update(employer);
+            if (updatedEmployer == null)
             {
-                Employer updatedEmployer = _employerService.Update(employer);
-                return Ok(updatedEmployer);
-
+                _validator.AddMessage("Employee not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Error at employee update: {ex.Message}"); }
+
+            employerDTO = _mapper.Map<EmployerDTO>(updatedEmployer);
+            return Ok(employerDTO);
         }
 
         /// <summary>
@@ -108,13 +112,15 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteEmployer(int id)
         {
-            try
+            Employer employer = _employerService.Delete(id);
+            if (employer == null)
             {
-                Employer employer = _employerService.Delete(id);
-                return Ok(employer);
-
+                _validator.AddMessage("Employee not found.");
+                return NotFound();
             }
-            catch (Exception ex) { return Problem($"Erro ao remover registro de Funcionário: {ex.Message}"); }
+
+            EmployerDTO employerDTO = _mapper.Map<EmployerDTO>(employer);
+            return Ok(employerDTO);
         }
     }
 }

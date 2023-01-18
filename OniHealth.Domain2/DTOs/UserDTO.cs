@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OniHealth.Web.DTOs
+namespace OniHealth.Domain.DTOs
 {
     public class UserDTO
     {
