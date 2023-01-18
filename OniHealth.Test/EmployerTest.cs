@@ -1,3 +1,4 @@
+using OniHealth.Domain.Enums;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Repositories;
 

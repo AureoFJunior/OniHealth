@@ -1,8 +1,8 @@
-using OniHealth.Domain.Interfaces;
+using OniHealth.Domain.Interfaces.Repositories;
 
 namespace OniHealth.Domain.Models
 {
-    public class EmployerService
+    public class EmployerService : IEmployerService<Employer>
     {
         private readonly IRepository<Employer> _employerRepository;
 
@@ -21,8 +21,7 @@ namespace OniHealth.Domain.Models
                 includedEmployer = await _employerRepository.CreateAsync(employer);
                 return includedEmployer;
             }
-            else
-                return null;
+            throw new InsertDatabaseException();
         }
 
         public Employer Update(Employer employer)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using OniHealth.Domain.Interfaces;
+using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Context;
 

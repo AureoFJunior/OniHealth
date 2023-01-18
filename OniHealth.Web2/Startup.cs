@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OniHealth.Application.DI;
+using OniHealth.Web.Config;
+using OniHealth.Web.Filters;
 
 namespace OniHealth.Web
 {
@@ -28,8 +31,13 @@ namespace OniHealth.Web
         public void ConfigureServices(IServiceCollection services)
         {
             Initializer.Configure(services, Configuration.GetConnectionString("DefaultConnection"));
-            services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddControllers(config =>
+            {
+                config.Filters.Add(typeof(HttpGlobalExceptionFilter));
+                config.Filters.Add<ValidatorFilter>();
+            })
+            .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddCors();
 
@@ -67,7 +75,6 @@ namespace OniHealth.Web
                 c.IncludeXmlComments(xmlPath);
             });
 
-            //services.AddAuthentication(Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme);
             var key = Encoding.ASCII.GetBytes("f0f228f0-4f22-45bc-bed8-bea3c97d463d");
             services.AddAuthentication(x =>
             {

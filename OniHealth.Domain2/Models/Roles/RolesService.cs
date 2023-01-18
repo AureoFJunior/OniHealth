@@ -1,4 +1,4 @@
-using OniHealth.Domain.Interfaces;
+using OniHealth.Domain.Interfaces.Repositories;
 
 namespace OniHealth.Domain.Models
 {
@@ -21,7 +21,7 @@ namespace OniHealth.Domain.Models
                 includedRoles = await _employerRepository.CreateAsync(roles);
                 return includedRoles;
             }
-            return null;
+            throw new InsertDatabaseException();
         }
 
         public Roles Update(Roles roles)
