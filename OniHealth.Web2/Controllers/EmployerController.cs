@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using AutoMapper;
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 using OniHealth.Web.Config;
 
 namespace OniHealth.Web.Controllers

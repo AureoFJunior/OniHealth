@@ -10,7 +10,7 @@ namespace OniHealth.Test
         public ContextFactory()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-           .UseSqlServer("Server=AMAJIKI\\SQLEXPRESS;Database=oniHealth;Trusted_Connection=True;")
+           .UseNpgsql("Server=onihealthdb.ce6vmgidwgna.us-east-1.rds.amazonaws.com;Database=onihealthDB;Uid=postgres;Pwd=postgres1234")
            .Options;
 
             // Insert seed data into the database using one instance of the context

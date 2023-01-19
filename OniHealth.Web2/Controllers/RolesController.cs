@@ -10,6 +10,7 @@ using OniHealth.Infra.Repositories;
 using AutoMapper;
 using System.Data;
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 using OniHealth.Web.Config;
 
 namespace OniHealth.Web.Controllers
@@ -18,13 +19,13 @@ namespace OniHealth.Web.Controllers
     [Route("api/[controller]/[action]")]
     public class RolesController : Controller
     {
-        private readonly RolesService _rolesService;
+        private readonly IRolesService<Roles> _rolesService;
         private readonly IRepositoryRoles _rolesRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
 
-        public RolesController(RolesService rolesService,
+        public RolesController(IRolesService<Roles> rolesService,
             IRepositoryRoles rolesRepository,
             IMapper mapper,
             IValidator validator)
