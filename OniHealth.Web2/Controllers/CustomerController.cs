@@ -11,6 +11,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OniHealth.Domain.Interfaces.Services;
+using OniHealth.Web.Config;
+using AutoMapper;
 
 namespace OniHealth.Web.Controllers
 {
@@ -18,13 +21,17 @@ namespace OniHealth.Web.Controllers
     [Route("api/[controller]/[action]")]
     public class CustomerController : Controller
     {
-        private readonly CustomerService _customerService;
+        private readonly ICustomerService<Customer> _customerService;
         private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly IMapper _mapper;
+        private readonly IValidator _validator;
 
-        public CustomerController(CustomerService customerService, IRepository<Customer> repositoryCustomer)
+        public CustomerController(IRepository<Customer> customerRepository, ICustomerService<Customer> customerService, IMapper mapper, Validator validator)
         {
             _customerService = customerService;
-            _repositoryCustomer = repositoryCustomer;
+            _repositoryCustomer = customerRepository;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         /// <summary>
@@ -34,25 +41,16 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCustomers()
         {
-            try
+            IEnumerable<Customer> customers = await _repositoryCustomer.GetAllAsync();
+
+            if (customers == null)
             {
-                IEnumerable<Customer> customers = await _repositoryCustomer.GetAllAsync();
-
-                IEnumerable<CustomerDTO> customer = customers.Where(x => x != null)
-                      .Select(x => new CustomerDTO { Id = x.Id, Name = x.Name, Email = x.Email, BirthDate = x.BirthDate, SignedPlan = x.SignedPlan, IsDependent = x.IsDependent, PhoneNumber = x.PhoneNumber });
-
-                if (!customer.Any())
-                {
-                    return NotFound(new { message = $"Customers not found." });
-                }
-
-                return Ok(customer);
+                _validator.AddMessage("Customers not found");
+                return NotFound();
             }
 
-            catch (Exception e)
-            {
-                return Problem($"Error at customers search: {e.Message}");
-            }
+            IEnumerable<CustomerDTO> customer = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
+            return Ok(customers);
         }
 
         /// <summary>
@@ -63,60 +61,53 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
-            try
-            {
-                Customer customer = await _repositoryCustomer.GetByIdAsync(id);
-                if (customer == null)
-                {
-                    return NotFound(new { message = $"Customer with the ID={id} was not found" });
-                }
+            Customer customer = await _repositoryCustomer.GetByIdAsync(id);
 
-                return Ok(customer);
-            }
-            catch (Exception e)
+            if (customer == null)
             {
-                return Problem($"Error at customer search: {e.Message}");
+                _validator.AddMessage("Customer not found");
+                return NotFound();
+
             }
+            CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
+            return Ok(customerDTO);
         }
 
         /// <summary>
         /// Add a new customer
         /// </summary>
-        /// <param name="customer">Customer to be added</param>
+        /// <param name="customerDTO">Customer to be added</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
+        public async Task<IActionResult> AddCustomer([FromBody] CustomerDTO customerDTO)
         {
-            try
-            {
-                Customer createdCustomer = await _customerService.CreateAsync(customer);
+            Customer customer = _mapper.Map<Customer>(customerDTO);
+            Customer createdCustomer = await _customerService.CreateAsync(customer);
+            customerDTO = _mapper.Map<CustomerDTO>(createdCustomer);
 
-                return Ok(createdCustomer);
-            }
-            catch (Exception e)
-            {
-                return Problem($"Error at customer creation: {e.Message}");
-            }
+            return Ok(customerDTO);
         }
 
         /// <summary>
         /// Update an customer
         /// </summary>
-        /// <param name="customer">Customer to be updated.</param>
+        /// <param name="customerDTO">Customer to be updated.</param>
         /// <returns></returns>
-        [HttpPut] 
-        public async Task<IActionResult> UpdateCustomer([FromBody] Customer customer)
+        [HttpPut]
+        public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customerDTO)
         {
-            try
-            {
-                Customer updatedCustomer =  _customerService.Update(customer);
+            Customer customer = _mapper.Map<Customer>(customerDTO); 
+            Customer updatedCustomer = _customerService.Update(customer);
 
-                return Ok(updatedCustomer);
-            }
-            catch (Exception e)
+            if (updatedCustomer == null)
             {
-                return Problem($"Error at customer update: {e.Message}");
+                _validator.AddMessage("Customer not found");
+                return NotFound();
             }
+
+            customerDTO = _mapper.Map<CustomerDTO>(updatedCustomer);
+
+            return Ok(customerDTO);
         }
 
         /// <summary>
@@ -127,17 +118,16 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            try
-            {
-                Customer deletedCustomer = _customerService.Delete(id);
+            Customer deletedCustomer = _customerService.Delete(id);
 
-                return Ok(deletedCustomer);
-
-            }
-            catch (Exception e)
+            if (deletedCustomer == null)
             {
-                return Problem($"Error at delete customer: {e.Message}");
+                _validator.AddMessage("Customer not found");
+                return NotFound();
             }
+
+            CustomerDTO customer = _mapper.Map<CustomerDTO>(deletedCustomer);
+            return Ok(deletedCustomer);
         }
     }
 }

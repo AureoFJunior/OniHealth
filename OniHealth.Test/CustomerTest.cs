@@ -38,7 +38,7 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Customer customer = new Customer("Teste Unit", "teste@gmail.com", new DateTime(2002, 1, 18), 2, true, "999999999");
+            Customer customer = new Customer("Customer", "customerTeste@gmail.com", new DateTime(2002, 1, 18).ToUniversalTime(), 2, true, "999999999");
             Assert.NotNull(await _customerService.CreateAsync(customer));
         }
 
