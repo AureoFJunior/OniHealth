@@ -5,6 +5,7 @@ using OniHealth.Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 
 namespace OniHealth.Application.DI
 {
@@ -22,9 +23,9 @@ namespace OniHealth.Application.DI
             services.AddTransient(typeof(IRepositoryRoles), typeof(RolesRepository));
 
             services.AddScoped(typeof(IEmployerService<Employer>), typeof(EmployerService));
-            services.AddScoped(typeof(RolesService));
+            services.AddScoped(typeof(IRolesService<Roles>), typeof(RolesService));
             services.AddScoped(typeof(TokenService));
-            services.AddScoped(typeof(UserService));
+            services.AddScoped(typeof(IUserService<User>), typeof(UserService));
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
         }
