@@ -60,7 +60,7 @@ namespace OniHealth.Web.Controllers
             User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
             if (users == null)
             {
-                _validator.AddMessage("User or password incorrect.");
+                _validator.AddMessage("User or password incorrect..");
                 return NotFound();
             }
 
