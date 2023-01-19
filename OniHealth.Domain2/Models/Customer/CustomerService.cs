@@ -1,8 +1,9 @@
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 
 namespace OniHealth.Domain.Models
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService<Customer>
     {
         private readonly IRepository<Customer> _customerRepository;
 
@@ -18,12 +19,11 @@ namespace OniHealth.Domain.Models
 
             if (existentCustomer == null)
             {
-                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent, customer.PhoneNumber);
                 includedCustomer = await _customerRepository.CreateAsync(customer);
                 return includedCustomer;
             }
-            else
-                return null;
+
+            throw new InsertDatabaseException();
         }
 
         public Customer Update(Customer customer)
@@ -32,8 +32,7 @@ namespace OniHealth.Domain.Models
             Customer updatedCustomer = new Customer();
 
             if (customer != null)
-            {
-                customer = new Customer(customer.Name, customer.Email, customer.BirthDate, customer.SignedPlan, customer.IsDependent, customer.PhoneNumber);
+            { 
                 updatedCustomer = _customerRepository.Update(customer);
                 return updatedCustomer;
             }

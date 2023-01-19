@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OniHealth.Domain.DTOs;
 using OniHealth.Domain.Interfaces;
+using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Context;
-using OniHealth.Web.DTOs;
+using OniHealth.Domain.DTOs;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -15,10 +15,10 @@ namespace OniHealth.Test
         private readonly CustomerService _customerService;
         private readonly CustomerRepository _customerRepository;
 
-        public CustomerTest(CustomerService customerService, CustomerRepository customerRepository)
+        public CustomerTest()
         {
-            _customerService = customerService;
-            _customerRepository = customerRepository;
+            _customerRepository = new CustomerRepository(new ContextFactory().Context);
+            _customerService = new CustomerService(_customerRepository);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Customer customer = new Customer("Teste Unit", "teste@gmail.com", new DateTime(18 / 01 / 2013), 2, true, "999999999");
+            Customer customer = new Customer("Teste Unit", "teste@gmail.com", new DateTime(2002, 1, 18), 2, true, "999999999");
             Assert.NotNull(await _customerService.CreateAsync(customer));
         }
 
