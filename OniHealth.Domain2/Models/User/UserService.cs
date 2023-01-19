@@ -1,8 +1,9 @@
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 
 namespace OniHealth.Domain.Models
 {
-    public class UserService
+    public class UserService : IUserService<User>
     {
         private readonly IRepository<User> _userRepository;
 

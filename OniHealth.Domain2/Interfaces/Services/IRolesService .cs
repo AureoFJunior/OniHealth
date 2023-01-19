@@ -1,17 +1,17 @@
 using OniHealth.Domain.Models;
 using System.Collections.Generic;
 
-namespace OniHealth.Domain.Interfaces.Repositories
+namespace OniHealth.Domain.Interfaces.Services
 {
     public interface IRolesService<TEntity> where TEntity : class
     {
         #region Sync
-        Roles Delete(int id);
-        Roles Update(Roles roles);
+        TEntity Delete(int id);
+        TEntity Update(Roles roles);
         #endregion
 
         #region Async
-        Task<Roles> CreateAsync(Roles roles);
+        Task<TEntity> CreateAsync(Roles roles);
         #endregion
     }
 }

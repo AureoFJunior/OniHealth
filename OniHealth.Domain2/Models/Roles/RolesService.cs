@@ -1,4 +1,5 @@
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 
 namespace OniHealth.Domain.Models
 {

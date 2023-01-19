@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace OniHealth.Domain.Interfaces.Services
 {
-    public interface IEmployerService<TEntity> where TEntity : class
+    public interface IUserService<TEntity> where TEntity : class
     {
         #region Sync
-        TEntity Delete(int id);
-        TEntity Update(Employer employer);
+        public TEntity Delete(int id);
+        public TEntity Update(User user);
         #endregion
 
         #region Async
-        Task<TEntity> CreateAsync(Employer employer);
+        public Task<TEntity> CreateAsync(User user);
         #endregion
     }
 }

@@ -8,6 +8,7 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using OniHealth.Domain;
 using OniHealth.Domain.Interfaces.Repositories;
+using OniHealth.Domain.Interfaces.Services;
 using AutoMapper;
 using OniHealth.Web.Config;
 
@@ -17,12 +18,12 @@ namespace OniHealth.Web.Controllers
     [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IUserService<User> _userService;
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
-        public UserController(UserService userService,
+        public UserController(IUserService<User> userService,
             IRepository<User> userRepository,
             IMapper mapper,
             IValidator validator)
