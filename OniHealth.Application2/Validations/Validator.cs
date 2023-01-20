@@ -41,6 +41,12 @@ namespace OniHealth.Web.Config
             AddMessage(validationResult.ErrorMessage);
         }
 
+        public void AsNotFound(string msg)
+        {
+            Return = StatusCodeReturn.NotFound;
+            _messages?.Add(msg);
+        }
+
         public void AsNotFound()
         {
             Return = StatusCodeReturn.NotFound;
