@@ -23,147 +23,147 @@ namespace OniHealth.Infra.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("OniHealth.Domain.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("BirthDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<bool>("IsDependent")
-                        .HasColumnType("boolean");
+                b.Property<bool>("IsDependent")
+                    .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("PhoneNumber")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<short>("SignedPlan")
-                        .HasColumnType("smallint");
+                b.Property<short>("SignedPlan")
+                    .HasColumnType("smallint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Customer");
-                });
+                b.ToTable("Customer");
+            });
 
             modelBuilder.Entity("OniHealth.Domain.Models.Employer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("PhoneNumber")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
+                b.Property<int>("Role")
+                    .HasColumnType("integer");
 
-                    b.Property<int>("Salary")
-                        .HasColumnType("integer");
+                b.Property<int>("Salary")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("ZipCode")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("Role");
+                b.HasIndex("Role");
 
-                    b.ToTable("Employer");
-                });
+                b.ToTable("Employer");
+            });
 
             modelBuilder.Entity("OniHealth.Domain.Models.Roles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Roles");
-                });
+                b.ToTable("Roles");
+            });
 
             modelBuilder.Entity("OniHealth.Domain.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("BirthDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Email")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("FirstName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<short?>("IsLogged")
-                        .HasColumnType("smallint");
+                b.Property<short?>("IsLogged")
+                    .HasColumnType("smallint");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("LastName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Password")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("UserName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("User");
-                });
+                b.ToTable("User");
+            });
 
             modelBuilder.Entity("OniHealth.Domain.Models.Employer", b =>
-                {
-                    b.HasOne("OniHealth.Domain.Models.Roles", "Roles")
-                        .WithMany("Employer")
-                        .HasForeignKey("Role")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("OniHealth.Domain.Models.Roles", "Roles")
+                    .WithMany("Employer")
+                    .HasForeignKey("Role")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Roles");
-                });
+                b.Navigation("Roles");
+            });
 
             modelBuilder.Entity("OniHealth.Domain.Models.Roles", b =>
-                {
-                    b.Navigation("Employer");
-                });
+            {
+                b.Navigation("Employer");
+            });
 #pragma warning restore 612, 618
         }
     }

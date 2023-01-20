@@ -60,7 +60,7 @@ namespace OniHealth.Web.Controllers
             User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
             if (users == null)
             {
-                _validator.AddMessage("User or password incorrect.");
+                _validator.AddMessage("User or password incorrect..");
                 return NotFound();
             }
 
@@ -152,16 +152,14 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Add a new user
         /// </summary>
-        /// <param name="userDTO">User to be added</param>
+        /// <param name="user">User to be added</param>
         /// <returns>The added user</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> AddUser([FromBody] User user)
         {
-            User user = _mapper.Map<User>(userDTO);
             User createdUser = await _userService.CreateAsync(user);
-            userDTO = _mapper.Map<UserDTO>(createdUser);
-            return Ok(userDTO);
+            return Ok(createdUser);
         }
 
         /// <summary>

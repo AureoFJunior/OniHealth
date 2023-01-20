@@ -7,14 +7,14 @@ namespace OniHealth.Domain.Models
 {
     public class Employer : BaseEntity
     {
-        public Employer(){}
+        public Employer() { }
 
         public Employer(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
             ValidateCategory(name, email, role, salary, phoneNumber, zipCode);
             Name = name;
             Email = email;
-            Role = (int) role;
+            Role = (int)role;
             Salary = salary;
             PhoneNumber = phoneNumber;
             ZipCode = zipCode;
@@ -30,7 +30,7 @@ namespace OniHealth.Domain.Models
         public int Salary { get; set; }
         public string PhoneNumber { get; set; }
         public string ZipCode { get; set; }
-        
+
 
         public void Update(string name, string email, EmployerRole role, int salary, string phoneNumber, string zipCode)
         {
