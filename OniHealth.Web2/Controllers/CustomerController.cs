@@ -101,7 +101,7 @@ namespace OniHealth.Web.Controllers
 
             if (updatedCustomer == null)
             {
-                _validator.AddMessage("Customer not found");
+                _validator.AddMessage("Customer not found.");
                 return NotFound();
             }
 
