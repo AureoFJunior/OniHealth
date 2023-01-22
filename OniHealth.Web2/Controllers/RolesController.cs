@@ -142,7 +142,7 @@ namespace OniHealth.Web.Controllers
             Roles roles = _rolesService.Delete(id);
             if (roles == null)
             {
-                _validator.AddMessage("Role not found. dale");
+                _validator.AddMessage("Role not found. '-'");
                 return NotFound();
             }
 
