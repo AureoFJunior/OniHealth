@@ -13,5 +13,6 @@ namespace OniHealth.Web.Config
         void AddMessages(ICollection<string> msgs);
         void AddMessages(ValidationResult validationResult);
         void AsNotFound();
+        void AsNotFound(string msg);
     }
 }

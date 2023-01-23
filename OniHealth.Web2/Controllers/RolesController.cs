@@ -45,10 +45,7 @@ namespace OniHealth.Web.Controllers
         {
             IEnumerable<Roles> roles = await _rolesRepository.GetAllAsync();
             if (roles == null)
-            {
-                _validator.AddMessage("Role not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Role not found.");
 
             IEnumerable<RolesDTO> rolesDTO = _mapper.Map<IEnumerable<RolesDTO>>(roles);
             return Ok(rolesDTO);
@@ -64,10 +61,7 @@ namespace OniHealth.Web.Controllers
         {
             Roles roles = await _rolesRepository.GetByIdAsync(id);
             if (roles == null)
-            {
-                _validator.AddMessage("Role not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Role not found.");
 
             RolesDTO role = _mapper.Map<RolesDTO>(roles);
             return Ok(role);
@@ -122,10 +116,7 @@ namespace OniHealth.Web.Controllers
             Roles role = _mapper.Map<Roles>(rolesDTO);
             Roles updatedRoles = _rolesService.Update(role);
             if (updatedRoles == null)
-            {
-                _validator.AddMessage("Role not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Role not found.");
 
             rolesDTO = _mapper.Map<RolesDTO>(updatedRoles);
             return Ok(rolesDTO);
@@ -141,10 +132,7 @@ namespace OniHealth.Web.Controllers
         {
             Roles roles = _rolesService.Delete(id);
             if (roles == null)
-            {
-                _validator.AddMessage("Role not found. '-'");
-                return NotFound();
-            }
+            _validator.AsNotFound("Role not found. '-'");
 
             RolesDTO rolesDTO = _mapper.Map<RolesDTO>(roles);
             return Ok(rolesDTO);

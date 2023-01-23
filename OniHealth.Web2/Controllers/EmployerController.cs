@@ -43,10 +43,7 @@ namespace OniHealth.Web.Controllers
         {
             IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
             if (employers == null)
-            {
-                _validator.AddMessage("Employees not found.");
-                return NotFound();
-            }
+                _validator.AsNotFound("Employees not found.");
 
             IEnumerable<EmployerDTO> employer = _mapper.Map<IEnumerable<EmployerDTO>>(employers);
             return Ok(employer);
@@ -62,10 +59,7 @@ namespace OniHealth.Web.Controllers
         {
             Employer employer = await _employerRepository.GetByIdAsync(id);
             if (employer == null)
-            {
-                _validator.AddMessage("Employee not found.");
-                return NotFound();
-            }
+                _validator.AsNotFound("Employee not found.");
 
             EmployerDTO employerDTO = _mapper.Map<EmployerDTO>(employer);
             return Ok(employerDTO);
@@ -96,10 +90,7 @@ namespace OniHealth.Web.Controllers
             Employer employer = _mapper.Map<Employer>(employerDTO);
             Employer updatedEmployer = _employerService.Update(employer);
             if (updatedEmployer == null)
-            {
-                _validator.AddMessage("Employee not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Employee not found.");
 
             employerDTO = _mapper.Map<EmployerDTO>(updatedEmployer);
             return Ok(employerDTO);
@@ -115,10 +106,7 @@ namespace OniHealth.Web.Controllers
         {
             Employer employer = _employerService.Delete(id);
             if (employer == null)
-            {
-                _validator.AddMessage("Employee not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Employee not found.");
 
             EmployerDTO employerDTO = _mapper.Map<EmployerDTO>(employer);
             return Ok(employerDTO);

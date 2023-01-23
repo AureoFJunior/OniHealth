@@ -46,10 +46,7 @@ namespace OniHealth.Web.Controllers
         {
             List<User> users = _userRepository.GetAll().ToList();
             if (users == null)
-            {
-                _validator.AddMessage("User not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("User not found.");
 
             foreach (User userUpdate in users)
             {
@@ -59,10 +56,7 @@ namespace OniHealth.Web.Controllers
 
             User user = users.Where(x => x != null && x.UserName == userName && x.Password == password).FirstOrDefault();
             if (users == null)
-            {
-                _validator.AddMessage("User or password incorrect..");
-                return NotFound();
-            }
+            _validator.AsNotFound("User or password incorrect..");
 
             string token, refreshToken;
             GenerateToken(user, out token, out refreshToken);
@@ -103,10 +97,7 @@ namespace OniHealth.Web.Controllers
         {
             IEnumerable<User> users = await _userRepository.GetAllAsync();
             if (users == null)
-            {
-                _validator.AddMessage("Users not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("Users not found.");
 
             IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
             return Ok(userDTO);
@@ -122,10 +113,7 @@ namespace OniHealth.Web.Controllers
         {
             User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-            {
-                _validator.AddMessage("User not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("User not found.");
 
             IEnumerable<UserDTO> userDTO = _mapper.Map<IEnumerable<UserDTO>>(user);
             return Ok(userDTO);
@@ -140,10 +128,7 @@ namespace OniHealth.Web.Controllers
         {
             IEnumerable<User> users = await _userRepository.GetAllAsync();
             if (users == null)
-            {
-                _validator.AddMessage("User not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("User not found.");
 
             UserDTO user = users.Where(x => x.IsLogged == 1).Select(x => new UserDTO { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, Email = x.Email, BirthDate = x.BirthDate, Token = "" }).FirstOrDefault();
             return Ok(user);
@@ -174,10 +159,7 @@ namespace OniHealth.Web.Controllers
             User updatedUser = _userService.Update(user);
 
             if (updatedUser == null)
-            {
-                _validator.AddMessage("User not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("User not found.");
 
             userDTO = _mapper.Map<UserDTO>(updatedUser);
             return Ok(userDTO);
@@ -193,10 +175,7 @@ namespace OniHealth.Web.Controllers
         {
             User user = _userService.Delete(id);
             if (user == null)
-            {
-                _validator.AddMessage("User not found.");
-                return NotFound();
-            }
+            _validator.AsNotFound("User not found.");
 
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return Ok(userDTO);
