@@ -44,7 +44,7 @@ namespace OniHealth.Web.Controllers
             IEnumerable<Employer> employers = await _employerRepository.GetAllAsync();
             if (employers == null)
             {
-                _validator.AddMessage("Employees not found.");
+                _validator.AsNotFound("Employees not found.");
                 return NotFound();
             }
 
@@ -63,7 +63,7 @@ namespace OniHealth.Web.Controllers
             Employer employer = await _employerRepository.GetByIdAsync(id);
             if (employer == null)
             {
-                _validator.AddMessage("Employee not found.");
+                _validator.AsNotFound("Employee not found.");
                 return NotFound();
             }
 
@@ -97,7 +97,7 @@ namespace OniHealth.Web.Controllers
             Employer updatedEmployer = _employerService.Update(employer);
             if (updatedEmployer == null)
             {
-                _validator.AddMessage("Employee not found.");
+                _validator.AsNotFound("Employee not found.");
                 return NotFound();
             }
 
@@ -116,7 +116,7 @@ namespace OniHealth.Web.Controllers
             Employer employer = _employerService.Delete(id);
             if (employer == null)
             {
-                _validator.AddMessage("Employee not found.");
+                _validator.AsNotFound("Employee not found.");
                 return NotFound();
             }
 

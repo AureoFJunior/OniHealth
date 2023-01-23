@@ -45,7 +45,7 @@ namespace OniHealth.Web.Controllers
 
             if (customers == null)
             {
-                _validator.AddMessage("Customers not found");
+                _validator.AsNotFound("Customers not found");
                 return NotFound();
             }
 
@@ -65,7 +65,7 @@ namespace OniHealth.Web.Controllers
 
             if (customer == null)
             {
-                _validator.AddMessage("Customer not found");
+                _validator.AsNotFound("Customer not found");
                 return NotFound();
 
             }
@@ -101,7 +101,7 @@ namespace OniHealth.Web.Controllers
 
             if (updatedCustomer == null)
             {
-                _validator.AddMessage("Customer not found.");
+                _validator.AsNotFound("Customer not found.");
                 return NotFound();
             }
 
@@ -122,7 +122,7 @@ namespace OniHealth.Web.Controllers
 
             if (deletedCustomer == null)
             {
-                _validator.AddMessage("Customer not found");
+                _validator.AsNotFound("Customer not found");
                 return NotFound();
             }
 

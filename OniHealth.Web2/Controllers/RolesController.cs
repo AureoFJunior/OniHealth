@@ -46,7 +46,7 @@ namespace OniHealth.Web.Controllers
             IEnumerable<Roles> roles = await _rolesRepository.GetAllAsync();
             if (roles == null)
             {
-                _validator.AddMessage("Role not found.");
+                _validator.AsNotFound("Role not found.");
                 return NotFound();
             }
 
@@ -65,7 +65,7 @@ namespace OniHealth.Web.Controllers
             Roles roles = await _rolesRepository.GetByIdAsync(id);
             if (roles == null)
             {
-                _validator.AddMessage("Role not found.");
+                _validator.AsNotFound("Role not found.");
                 return NotFound();
             }
 
@@ -123,7 +123,7 @@ namespace OniHealth.Web.Controllers
             Roles updatedRoles = _rolesService.Update(role);
             if (updatedRoles == null)
             {
-                _validator.AddMessage("Role not found.");
+                _validator.AsNotFound("Role not found.");
                 return NotFound();
             }
 
@@ -142,7 +142,7 @@ namespace OniHealth.Web.Controllers
             Roles roles = _rolesService.Delete(id);
             if (roles == null)
             {
-                _validator.AddMessage("Role not found. '-'");
+                _validator.AsNotFound("Role not found. '-'");
                 return NotFound();
             }
 
