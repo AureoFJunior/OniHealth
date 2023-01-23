@@ -47,7 +47,7 @@ namespace OniHealth.Web.Controllers
             List<User> users = _userRepository.GetAll().ToList();
             if (users == null)
             {
-                _validator.AddMessage("User not found.");
+                _validator.AsNotFound("User not found.");
                 return NotFound();
             }
 
@@ -104,7 +104,7 @@ namespace OniHealth.Web.Controllers
             IEnumerable<User> users = await _userRepository.GetAllAsync();
             if (users == null)
             {
-                _validator.AddMessage("Users not found.");
+                _validator.AsNotFound("Users not found.");
                 return NotFound();
             }
 
@@ -123,7 +123,7 @@ namespace OniHealth.Web.Controllers
             User user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
-                _validator.AddMessage("User not found.");
+                _validator.AsNotFound("User not found.");
                 return NotFound();
             }
 
@@ -141,7 +141,7 @@ namespace OniHealth.Web.Controllers
             IEnumerable<User> users = await _userRepository.GetAllAsync();
             if (users == null)
             {
-                _validator.AddMessage("User not found.");
+                _validator.AsNotFound("User not found.");
                 return NotFound();
             }
 
@@ -175,7 +175,7 @@ namespace OniHealth.Web.Controllers
 
             if (updatedUser == null)
             {
-                _validator.AddMessage("User not found.");
+                _validator.AsNotFound("User not found.");
                 return NotFound();
             }
 
@@ -194,7 +194,7 @@ namespace OniHealth.Web.Controllers
             User user = _userService.Delete(id);
             if (user == null)
             {
-                _validator.AddMessage("User not found.");
+                _validator.AsNotFound("User not found.");
                 return NotFound();
             }
 
