@@ -1,8 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
-using OniHealth.Domain.Enums;
 
 namespace OniHealth.Domain.Models
 {

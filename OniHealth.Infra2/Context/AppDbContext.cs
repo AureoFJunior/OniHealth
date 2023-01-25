@@ -61,16 +61,18 @@ namespace OniHealth.Infra.Context
             #endregion
         }
 
+        #region DbSets
         public DbSet<Employer> Employer { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<Consult> Consults { get; set; }
-        public DbSet<ConsultType> ConsultTypes { get; set; }
-        public DbSet<ConsultTime> ConsultTimes { get; set; }
-        public DbSet<Exam> Exams { get; set; }
-        //public DbSet<ExamTime> ExamTimes { get; set; }
-        //public DbSet<ExamPreparation> ExamPreparations { get; set; }
-        //public DbSet<Laboratory> Laboratories { get; set; }
+        public DbSet<Consult> Consult { get; set; }
+        public DbSet<ConsultType> ConsultType { get; set; }
+        public DbSet<ConsultTime> ConsultTime { get; set; }
+        public DbSet<Exam> Exam { get; set; }
+        public DbSet<ExamTime> ExamTime { get; set; }
+        public DbSet<ExamPreparation> ExamPreparation { get; set; }
+        public DbSet<Laboratory> Laboratory { get; set; }
+        #endregion
     }
 }
