@@ -44,20 +44,23 @@ namespace OniHealth.Infra.Context
             #endregion
 
             #region Exam
-          //  modelBuilder.Entity<Exam>()
-          //.HasOne(e => e.ExamTime)
-          //.WithOne(et => et.Exam)
-          //.HasForeignKey<ExamTime>(et => et.ExamId);
+            modelBuilder.Entity<Exam>()
+              .HasOne(e => e.ExamTime)
+              .WithMany()
+              .HasForeignKey(et => et.ExamTimeId)
+              .OnDelete(DeleteBehavior.Cascade);
 
-          //  modelBuilder.Entity<Exam>()
-          //      .HasOne(e => e.ExamPreparation)
-          //      .WithOne(ep => ep.Exam)
-          //      .HasForeignKey<ExamPreparation>(ep => ep.ExamId);
+            modelBuilder.Entity<Exam>()
+            .HasOne(e => e.ExamPreparation)
+            .WithMany()
+            .HasForeignKey(et => et.ExamPreparationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-          //  modelBuilder.Entity<Exam>()
-          //      .HasOne(e => e.Laboratory)
-          //      .WithOne(l => l.Exam)
-          //      .HasForeignKey<Laboratory>(l => l.ExamId);
+            modelBuilder.Entity<Exam>()
+            .HasOne(e => e.Laboratory)
+            .WithMany()
+            .HasForeignKey(et => et.LaboratoryId)
+            .OnDelete(DeleteBehavior.Cascade);
             #endregion
         }
 

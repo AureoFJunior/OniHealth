@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Context;
 
 namespace OniHealth.Infra.Repositories
 {
-    public class ConsultRepository : Repository<Employer>
+    public class ConsultRepository : Repository<Consult>, IRepositoryConsult
     {
         private readonly UnitOfWork unitOfWork;
         public ConsultRepository(AppDbContext context) : base(context)
@@ -14,9 +15,9 @@ namespace OniHealth.Infra.Repositories
             unitOfWork = new UnitOfWork(context);
         }
 
-        public async override Task<Employer> GetByIdAsync(int id)
+        public async override Task<Consult> GetByIdAsync(int id)
         {
-            var query = _context.Set<Employer>().Where(e => e.Id == id).AsNoTracking();
+            var query = _context.Set<Consult>().Where(e => e.Id == id).AsNoTracking();
 
             if (await query.AnyAsync())
                 return await query.FirstOrDefaultAsync();
@@ -24,11 +25,11 @@ namespace OniHealth.Infra.Repositories
             return null;
         }
 
-        public async override Task<IEnumerable<Employer>> GetAllAsync()
+        public async override Task<IEnumerable<Consult>> GetAllAsync()
         {
-            var query = _context.Set<Employer>();
+            var query = _context.Set<Consult>();
 
-            return await query.AnyAsync() ? await query.AsNoTracking().ToListAsync() : new List<Employer>();
+            return await query.AnyAsync() ? await query.AsNoTracking().ToListAsync() : new List<Consult>();
         }
     }
 }
