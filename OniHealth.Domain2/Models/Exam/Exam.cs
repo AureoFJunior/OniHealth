@@ -18,17 +18,17 @@ namespace OniHealth.Domain.Models
         #region Fields
         public string Name { get; set; }
 
-        //[ForeignKey(nameof(ExamTime))]
-        //public int? ExamTimeId { get; set; }
-        //public virtual ExamTime ExamTime { get; set; }
+        [ForeignKey(nameof(ExamTime))]
+        public int? ExamTimeId { get; set; }
+        public virtual ExamTime ExamTime { get; set; }
 
-        //[ForeignKey(nameof(ExamPreparation))]
-        //public int? ExamPreparationId { get; set; }
-        //public virtual ExamPreparation ExamPreparation { get; set; }
+        [ForeignKey(nameof(ExamPreparation))]
+        public int? ExamPreparationId { get; set; }
+        public virtual ExamPreparation ExamPreparation { get; set; }
 
-        //[ForeignKey(nameof(Laboratory))]
-        //public int? LaboratoryId { get; set; }
-        //public virtual Laboratory Laboratory { get; set; }
+        [ForeignKey(nameof(Laboratory))]
+        public int? LaboratoryId { get; set; }
+        public virtual Laboratory Laboratory { get; set; }
 
         [Column(TypeName = "text")]
         public string Details { get; set; }
