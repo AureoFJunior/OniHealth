@@ -14,6 +14,7 @@ namespace OniHealth.Domain.Enums
         Manager = 4,
         CTO = 5,
         CEO = 6,
-        CompanyOwner = 7
+        CompanyOwner = 7,
+        Doctor = 8
     }
 }
