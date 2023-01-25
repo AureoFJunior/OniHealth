@@ -139,6 +139,10 @@ namespace OniHealth.Infra.Migrations
                     b.Property<bool>("IsDependent")
                         .HasColumnType("boolean");
 
+
+                    b.Property<DateTime>("LastPaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -151,7 +155,6 @@ namespace OniHealth.Infra.Migrations
                         .HasColumnType("smallint");
 
                     b.HasKey("Id");
-
                     b.ToTable("Customer");
                 });
 
@@ -160,6 +163,7 @@ namespace OniHealth.Infra.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -308,6 +312,9 @@ namespace OniHealth.Infra.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<short>("ActualTheme")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -327,6 +334,10 @@ namespace OniHealth.Infra.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilePicture")
                         .IsRequired()
                         .HasColumnType("text");
 

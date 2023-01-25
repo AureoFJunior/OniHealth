@@ -24,5 +24,8 @@ namespace OniHealth.Domain.DTOs
 
         [Required]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public DateTime LastPaymentDate { get; set; }
     }
 }

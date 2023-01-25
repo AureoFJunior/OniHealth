@@ -19,6 +19,9 @@ namespace OniHealth.Domain.DTOs
         [Required]
         public DateTime BirthDate { get; set; }
 
+        [Required]
+        public string ProfilePicture { get; set; }
+
         public string Token { get; set; }
         public string RefreshToken { get; set; }
     }
