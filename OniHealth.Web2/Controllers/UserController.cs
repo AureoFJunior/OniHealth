@@ -168,9 +168,9 @@ namespace OniHealth.Web.Controllers
         /// <param name="userDTO">User to be updated</param>
         /// <returns>The updated user</returns>
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] User user)
         {
-            User user = _mapper.Map<User>(userDTO);
+            
             User updatedUser = _userService.Update(user);
 
             if (updatedUser == null)
@@ -179,8 +179,7 @@ namespace OniHealth.Web.Controllers
                 return NotFound();
             }
 
-            userDTO = _mapper.Map<UserDTO>(updatedUser);
-            return Ok(userDTO);
+            return Ok(user);
         }
 
         /// <summary>
@@ -198,8 +197,7 @@ namespace OniHealth.Web.Controllers
                 return NotFound();
             }
 
-            UserDTO userDTO = _mapper.Map<UserDTO>(user);
-            return Ok(userDTO);
+            return Ok(user);
         }
     }
 }

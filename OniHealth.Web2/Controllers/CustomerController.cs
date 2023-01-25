@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using OniHealth.Domain.DTOs;
-using OniHealth.Domain.Interfaces;
-using OniHealth.Domain.Interfaces.Repositories;
-using OniHealth.Domain.Models;
-using OniHealth.Infra.Context;
-using OniHealth.Domain.DTOs;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using AutoMapper;
+using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
 using OniHealth.Web.Config;
-using AutoMapper;
 
 namespace OniHealth.Web.Controllers
 {
@@ -22,14 +19,17 @@ namespace OniHealth.Web.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerService<Customer> _customerService;
-        private readonly IRepository<Customer> _repositoryCustomer;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
-        public CustomerController(IRepository<Customer> customerRepository, ICustomerService<Customer> customerService, IMapper mapper, Validator validator)
+        public CustomerController(IRepository<Customer> customerRepository,
+            ICustomerService<Customer> customerService,
+            IMapper mapper,
+            IValidator validator)
         {
             _customerService = customerService;
-            _repositoryCustomer = customerRepository;
+            _customerRepository = customerRepository;
             _mapper = mapper;
             _validator = validator;
         }
@@ -41,16 +41,15 @@ namespace OniHealth.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCustomers()
         {
-            IEnumerable<Customer> customers = await _repositoryCustomer.GetAllAsync();
-
+            IEnumerable<Customer> customers = await _customerRepository.GetAllAsync();
             if (customers == null)
             {
-                _validator.AsNotFound("Customers not found");
+                _validator.AsNotFound("Customers not found.");
                 return NotFound();
             }
 
             IEnumerable<CustomerDTO> customer = _mapper.Map<IEnumerable<CustomerDTO>>(customers);
-            return Ok(customers);
+            return Ok(customer);
         }
 
         /// <summary>
@@ -61,14 +60,13 @@ namespace OniHealth.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
-            Customer customer = await _repositoryCustomer.GetByIdAsync(id);
-
+            Customer customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null)
             {
-                _validator.AsNotFound("Customer not found");
+                _validator.AsNotFound("Customer not found.");
                 return NotFound();
-
             }
+
             CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
             return Ok(customerDTO);
         }
@@ -76,7 +74,7 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Add a new customer
         /// </summary>
-        /// <param name="customerDTO">Customer to be added</param>
+        /// <param name="CustomerDTO">Customer to be added</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddCustomer([FromBody] CustomerDTO customerDTO)
@@ -84,7 +82,6 @@ namespace OniHealth.Web.Controllers
             Customer customer = _mapper.Map<Customer>(customerDTO);
             Customer createdCustomer = await _customerService.CreateAsync(customer);
             customerDTO = _mapper.Map<CustomerDTO>(createdCustomer);
-
             return Ok(customerDTO);
         }
 
@@ -96,9 +93,8 @@ namespace OniHealth.Web.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customerDTO)
         {
-            Customer customer = _mapper.Map<Customer>(customerDTO); 
+            Customer customer = _mapper.Map<Customer>(customerDTO);
             Customer updatedCustomer = _customerService.Update(customer);
-
             if (updatedCustomer == null)
             {
                 _validator.AsNotFound("Customer not found.");
@@ -106,7 +102,6 @@ namespace OniHealth.Web.Controllers
             }
 
             customerDTO = _mapper.Map<CustomerDTO>(updatedCustomer);
-
             return Ok(customerDTO);
         }
 
@@ -118,16 +113,15 @@ namespace OniHealth.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            Customer deletedCustomer = _customerService.Delete(id);
-
-            if (deletedCustomer == null)
+            Customer customer = _customerService.Delete(id);
+            if (customer == null)
             {
-                _validator.AsNotFound("Customer not found");
+                _validator.AsNotFound("Customer not found.");
                 return NotFound();
             }
 
-            CustomerDTO customer = _mapper.Map<CustomerDTO>(deletedCustomer);
-            return Ok(deletedCustomer);
+            CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
+            return Ok(customerDTO);
         }
     }
 }
