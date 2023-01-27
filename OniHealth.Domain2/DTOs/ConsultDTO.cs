@@ -1,10 +1,10 @@
+using OniHealth.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace OniHealth.Domain.DTOs
 {
-    public class ConsultDTO
+    public class ConsultDTO : BaseEntity
     {
-        public int Id { get; set; }
 
         [Required]
         public string Title { get; set; }

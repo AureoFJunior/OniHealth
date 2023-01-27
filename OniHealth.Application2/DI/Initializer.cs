@@ -25,6 +25,7 @@ namespace OniHealth.Application.DI
             services.AddScoped(typeof(IRepository<Customer>), typeof(CustomerRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IRepositoryRoles), typeof(RolesRepository));
+            services.AddTransient(typeof(IRepositoryConsult), typeof(ConsultRepository));
 
 
             services.AddScoped(typeof(IEmployerService<Employer>), typeof(EmployerService));
@@ -32,6 +33,7 @@ namespace OniHealth.Application.DI
             services.AddScoped(typeof(ICustomerService<Customer>), typeof(CustomerService));
             services.AddScoped(typeof(TokenService));
             services.AddScoped(typeof(IUserService<User>), typeof(UserService));
+            services.AddScoped(typeof(IConsultService<Consult>), typeof(ConsultService));
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 

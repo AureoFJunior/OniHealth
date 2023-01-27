@@ -11,7 +11,8 @@ namespace OniHealth.Domain.Interfaces.Services
         #endregion
 
         #region Async
-        Task<TEntity> CreateAsync(Consult consult);
+        //Task<TEntity> CreateAsync(Consult consult);
+        Task CreateAsync();
         #endregion
     }
 }

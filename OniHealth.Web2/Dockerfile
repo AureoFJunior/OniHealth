@@ -5,11 +5,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-
-ENV ASPNETCORE_URLS="http://+;"
-EXPOSE 5000
-EXPOSE 5001
-
 ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
@@ -30,3 +25,19 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "OniHealth.Web.dll"]
+
+RUN apt-get update -y && apt-get install -y rabbitmq-server
+FROM rabbitmq:3-management
+COPY . /app
+RUN rabbitmq-plugins enable rabbitmq_management
+RUN echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
+RUN echo "rabbitmq:x:1000:1000:RabbitMQ:/var/lib/rabbitmq:/bin/bash" >> /etc/localhost
+RUN echo "rabbitmq:x:1000:" >> /etc/group
+RUN echo "rabbitmq:x:1000:1000:RabbitMQ:/var/lib/rabbitmq:/bin/bash" >> /etc/localhost
+RUN echo "rabbitmq:x:1000:" >> /etc/group
+#RUN rabbitmqctl add_user admin 123456
+#RUN rabbitmqctl set_user_tags admin administrator
+#RUN rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
+EXPOSE 5672 15672
+CMD rabbitmq-server & dotnet run -p /app/OniHealth.Web.csproj
+CMD service rabbitmq-server start && dotnet OniHealth.Web.dll
