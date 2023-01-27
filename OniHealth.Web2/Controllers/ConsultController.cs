@@ -1,16 +1,18 @@
 using System.Collections.Generic;
-using System.Linq;
 using OniHealth.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
-using System;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
 using AutoMapper;
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
 using OniHealth.Web.Config;
+using Newtonsoft.Json;
+using System.Text;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using OniHealth.Domain.Utils;
 
 namespace OniHealth.Web.Controllers
 {
@@ -19,11 +21,11 @@ namespace OniHealth.Web.Controllers
     public class ConsultController : Controller
     {
         private readonly IConsultService<Consult> _consultService;
-        private readonly IRepository<Consult> _consultRepository;
+        private readonly IRepositoryConsult _consultRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
-        public ConsultController(IRepository<Consult> consultRepository,
+        public ConsultController(IRepositoryConsult consultRepository,
             IConsultService<Consult> consultService,
             IMapper mapper,
             IValidator validator)
@@ -79,8 +81,11 @@ namespace OniHealth.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddConsult([FromBody] ConsultDTO consultDTO)
         {
+            string queueName = "addConsultQueue";
             Consult consult = _mapper.Map<Consult>(consultDTO);
-            Consult createdConsult = await _consultService.CreateAsync(consult);
+            await SharedFunctions.EnqueueAsync(consult, queueName);
+            Consult createdConsult = new Consult();
+            await SharedFunctions.DequeueAndProcessAsync<Consult>(queueName);
             consultDTO = _mapper.Map<ConsultDTO>(createdConsult);
             return Ok(consultDTO);
         }

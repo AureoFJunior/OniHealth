@@ -1,5 +1,6 @@
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
+using OniHealth.Domain.Utils;
 
 namespace OniHealth.Domain.Models
 {
@@ -12,17 +13,33 @@ namespace OniHealth.Domain.Models
             _consultRepository = consultRepository;
         }
 
-        public async Task<Consult> CreateAsync(Consult consult)
-        {
-            Consult existentConsult = _consultRepository.GetById(consult.Id);
-            Consult includedConsult = new Consult();
+        //public async Task<Consult> CreateAsync(Consult consult)
+        //{
+        //    Consult existentConsult = _consultRepository.GetById(consult.Id);
+        //    Consult includedConsult = new Consult();
 
-            if (existentConsult == null)
+        //    if (existentConsult == null)
+        //    {
+        //        includedConsult = await _consultRepository.CreateAsync(consult);
+        //        return includedConsult;
+        //    }
+        //    throw new InsertDatabaseException();
+        //}
+
+        public async Task CreateAsync()
+        {
+            string queueName = "addConsultQueue";
+            while(true)
             {
-                includedConsult = await _consultRepository.CreateAsync(consult);
-                return includedConsult;
+                Consult consult = await SharedFunctions.DequeueAsync<Consult>(queueName);
+                Consult existentConsult = _consultRepository.GetById(consult.Id);
+
+                if (existentConsult == null)
+                {
+                    await _consultRepository.CreateAsync(consult);
+                }
+                throw new InsertDatabaseException();
             }
-            throw new InsertDatabaseException();
         }
 
         public Consult Update(Consult consult)
