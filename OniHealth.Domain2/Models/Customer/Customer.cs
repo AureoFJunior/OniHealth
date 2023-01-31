@@ -39,7 +39,7 @@ namespace OniHealth.Domain.Models
                 throw new InvalidOperationException("The email is invalid");
 
             if (DateTime.MinValue == birthDate)
-                throw new InvalidOperationException("Birth date is invalid");
+                throw new InvalidOperationException("Birthdate is invalid");
 
             if (signedPlan == null || signedPlan <= 0)
                 throw new InvalidOperationException("The plan is invalid");

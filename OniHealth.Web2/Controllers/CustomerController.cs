@@ -88,7 +88,7 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Update an customer
         /// </summary>
-        /// <param name="customerDTO">Customer to be updated.</param>
+        /// <param name="customerDTO">Customer's to be updated.</param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDTO customerDTO)
@@ -108,7 +108,7 @@ namespace OniHealth.Web.Controllers
         /// <summary>
         /// Delete an customer
         /// </summary>
-        /// <param name="id">Customer ID</param>
+        /// <param name="id">Customer's ID</param>
         /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteCustomer(int id)
