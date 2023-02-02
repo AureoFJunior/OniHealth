@@ -12,8 +12,8 @@ using OniHealth.Infra.Context;
 namespace OniHealth.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230125004443_Consult and Exam TABLES")]
-    partial class ConsultandExamTABLES
+    [Migration("20230202001727_Consult")]
+    partial class Consult
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,6 @@ namespace OniHealth.Infra.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("ConsultTimeId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<int?>("ConsultTypeId")
@@ -41,21 +40,18 @@ namespace OniHealth.Infra.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool?>("CustomerIsPresent")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("DoctorId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool?>("DoctorIsPresent")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("ExamId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
@@ -141,6 +137,9 @@ namespace OniHealth.Infra.Migrations
                     b.Property<bool>("IsDependent")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime>("LastPaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -206,14 +205,29 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("ExamPreparationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ExamTimeId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsAuthorized")
                         .HasColumnType("boolean");
+
+                    b.Property<int?>("LaboratoryId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ExamPreparationId");
+
+                    b.HasIndex("ExamTimeId");
+
+                    b.HasIndex("LaboratoryId");
 
                     b.ToTable("Exam");
                 });
@@ -310,6 +324,9 @@ namespace OniHealth.Infra.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<short>("ActualTheme")
+                        .HasColumnType("smallint");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -329,6 +346,10 @@ namespace OniHealth.Infra.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilePicture")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -393,6 +414,33 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("OniHealth.Domain.Models.Exam", b =>
+                {
+                    b.HasOne("OniHealth.Domain.Models.ExamPreparation", "ExamPreparation")
+                        .WithMany()
+                        .HasForeignKey("ExamPreparationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OniHealth.Domain.Models.ExamTime", "ExamTime")
+                        .WithMany()
+                        .HasForeignKey("ExamTimeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OniHealth.Domain.Models.Laboratory", "Laboratory")
+                        .WithMany()
+                        .HasForeignKey("LaboratoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExamPreparation");
+
+                    b.Navigation("ExamTime");
+
+                    b.Navigation("Laboratory");
                 });
 
             modelBuilder.Entity("OniHealth.Domain.Models.Roles", b =>

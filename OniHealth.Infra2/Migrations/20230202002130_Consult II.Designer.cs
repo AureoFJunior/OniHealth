@@ -12,8 +12,8 @@ using OniHealth.Infra.Context;
 namespace OniHealth.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230125135641_Exam inclusion")]
-    partial class Examinclusion
+    [Migration("20230202002130_Consult II")]
+    partial class ConsultII
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,29 +33,24 @@ namespace OniHealth.Infra.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("ConsultTimeId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<int?>("ConsultTypeId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<int?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool?>("CustomerIsPresent")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("DoctorId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool?>("DoctorIsPresent")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("ExamId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
@@ -210,18 +205,15 @@ namespace OniHealth.Infra.Migrations
                         .HasColumnType("text");
 
                     b.Property<int?>("ExamPreparationId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<int?>("ExamTimeId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsAuthorized")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("LaboratoryId")
-                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")

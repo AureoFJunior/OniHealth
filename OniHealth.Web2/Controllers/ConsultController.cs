@@ -85,9 +85,8 @@ namespace OniHealth.Web.Controllers
             Consult consult = _mapper.Map<Consult>(consultDTO);
             await SharedFunctions.EnqueueAsync(consult, queueName);
             Consult createdConsult = new Consult();
-            await SharedFunctions.DequeueAndProcessAsync<Consult>(queueName);
-            consultDTO = _mapper.Map<ConsultDTO>(createdConsult);
-            return Ok(consultDTO);
+            await _consultService.CreateAsync();
+            return Ok();
         }
 
         /// <summary>

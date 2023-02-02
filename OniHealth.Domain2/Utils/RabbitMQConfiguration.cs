@@ -1,3 +1,4 @@
+using RabbitMQ.Client;
 using System;
 
 namespace OniHealth.Domain.Models
@@ -6,10 +7,12 @@ namespace OniHealth.Domain.Models
     {
         public RabbitMQConfiguration()
         {
-            HostName = "rabbit@my-rabbitmq";
-            UserName = "ademe";
-            Password = "123456";
+            HostName= "172.17.0.2";
+            UserName = "guest";
+            Password = "guest";
+            VirtualHost= "/";
             Port = 5672;
+            Uri = new Uri("amqp://guest:guest@localhost:5672");
         }
 
         public RabbitMQConfiguration(string hostName, string userName, string password, int port)
@@ -18,11 +21,14 @@ namespace OniHealth.Domain.Models
             UserName = userName;
             Password = password;
             Port = port;
+            VirtualHost = "/";
         }
 
         public string HostName { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public int Port { get; set; }
+        public string VirtualHost { get; set; }
+        public Uri Uri { get; set; }
     }
 }

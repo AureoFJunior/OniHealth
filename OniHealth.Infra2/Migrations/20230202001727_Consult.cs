@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace OniHealth.Infra.Migrations
 {
-    public partial class ConsultandExamTABLES : Migration
+    public partial class Consult : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,18 +40,22 @@ namespace OniHealth.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Exam",
+                name: "Customer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Details = table.Column<string>(type: "text", nullable: false),
-                    IsAuthorized = table.Column<bool>(type: "boolean", nullable: false)
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SignedPlan = table.Column<short>(type: "smallint", nullable: false),
+                    IsDependent = table.Column<bool>(type: "boolean", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    LastPaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exam", x => x.Id);
+                    table.PrimaryKey("PK_Customer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,17 +103,111 @@ namespace OniHealth.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsLogged = table.Column<short>(type: "smallint", nullable: true),
+                    ActualTheme = table.Column<short>(type: "smallint", nullable: false),
+                    ProfilePicture = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Exam",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    ExamTimeId = table.Column<int>(type: "integer", nullable: true),
+                    ExamPreparationId = table.Column<int>(type: "integer", nullable: true),
+                    LaboratoryId = table.Column<int>(type: "integer", nullable: true),
+                    Details = table.Column<string>(type: "text", nullable: false),
+                    IsAuthorized = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exam", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Exam_ExamPreparation_ExamPreparationId",
+                        column: x => x.ExamPreparationId,
+                        principalTable: "ExamPreparation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Exam_ExamTime_ExamTimeId",
+                        column: x => x.ExamTimeId,
+                        principalTable: "ExamTime",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Exam_Laboratory_LaboratoryId",
+                        column: x => x.LaboratoryId,
+                        principalTable: "Laboratory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    Salary = table.Column<int>(type: "integer", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ZipCode = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employer_Roles_Role",
+                        column: x => x.Role,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Consult",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    ConsultTimeId = table.Column<int>(type: "integer", nullable: false),
+                    ConsultTimeId = table.Column<int>(type: "integer", nullable: true),
                     ConsultTypeId = table.Column<int>(type: "integer", nullable: false),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    DoctorId = table.Column<int>(type: "integer", nullable: false),
-                    ExamId = table.Column<int>(type: "integer", nullable: false),
+                    CustomerId = table.Column<int>(type: "integer", nullable: true),
+                    DoctorId = table.Column<int>(type: "integer", nullable: true),
+                    ExamId = table.Column<int>(type: "integer", nullable: true),
                     CustomerIsPresent = table.Column<bool>(type: "boolean", nullable: true),
                     DoctorIsPresent = table.Column<bool>(type: "boolean", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
@@ -173,12 +271,53 @@ namespace OniHealth.Infra.Migrations
                 name: "IX_Consult_ExamId",
                 table: "Consult",
                 column: "ExamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employer_Role",
+                table: "Employer",
+                column: "Role");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exam_ExamPreparationId",
+                table: "Exam",
+                column: "ExamPreparationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exam_ExamTimeId",
+                table: "Exam",
+                column: "ExamTimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exam_LaboratoryId",
+                table: "Exam",
+                column: "LaboratoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Consult");
+
+            migrationBuilder.DropTable(
+                name: "User");
+
+            migrationBuilder.DropTable(
+                name: "ConsultTime");
+
+            migrationBuilder.DropTable(
+                name: "ConsultType");
+
+            migrationBuilder.DropTable(
+                name: "Customer");
+
+            migrationBuilder.DropTable(
+                name: "Employer");
+
+            migrationBuilder.DropTable(
+                name: "Exam");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "ExamPreparation");
@@ -188,15 +327,6 @@ namespace OniHealth.Infra.Migrations
 
             migrationBuilder.DropTable(
                 name: "Laboratory");
-
-            migrationBuilder.DropTable(
-                name: "ConsultTime");
-
-            migrationBuilder.DropTable(
-                name: "ConsultType");
-
-            migrationBuilder.DropTable(
-                name: "Exam");
         }
     }
 }
