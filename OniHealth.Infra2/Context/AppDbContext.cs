@@ -12,6 +12,25 @@ namespace OniHealth.Infra.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Consult
+
+            modelBuilder.Entity<Consult>(entity =>
+            {
+                entity.Property(e => e.ConsultTimeId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.ConsultTypeId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.CustomerId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.DoctorId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.ExamId)
+                      .IsRequired(false);
+            });
+
             modelBuilder.Entity<Consult>()
                 .HasOne(c => c.ConsultType)
                 .WithMany()
@@ -23,6 +42,7 @@ namespace OniHealth.Infra.Context
                 .WithMany()
                 .HasForeignKey(c => c.ConsultTimeId)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Consult>()
                 .HasOne(c => c.Customer)
@@ -44,6 +64,19 @@ namespace OniHealth.Infra.Context
             #endregion
 
             #region Exam
+
+            modelBuilder.Entity<Exam>(entity =>
+            {
+                entity.Property(e => e.ExamTimeId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.ExamPreparationId)
+                      .IsRequired(false);
+
+                entity.Property(e => e.LaboratoryId)
+                      .IsRequired(false);
+            });
+
             modelBuilder.Entity<Exam>()
               .HasOne(e => e.ExamTime)
               .WithMany()

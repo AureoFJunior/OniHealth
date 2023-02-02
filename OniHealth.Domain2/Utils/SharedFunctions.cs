@@ -13,16 +13,14 @@ namespace OniHealth.Domain.Utils
     public static class SharedFunctions
     {
         #region RabbitMQ
-        public static void Enqueue<T>(T obj, string queueName)
+        private static void Enqueue<T>(T obj, string queueName)
         {
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
                 HostName = rabbitMQConfiguration.HostName,
-                UserName = rabbitMQConfiguration.UserName,
-                Password = rabbitMQConfiguration.Password,
-                Port = rabbitMQConfiguration.Port,
                 DispatchConsumersAsync = true
+
             };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
@@ -51,15 +49,14 @@ namespace OniHealth.Domain.Utils
             return Task.Run(() => Enqueue(obj, queueName));
         }
 
-        public static async Task<T> DequeueAsync<T>(string queueName)
+        private static async Task<T> DequeueAsync<T>(string queueName)
         {
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
                 HostName = rabbitMQConfiguration.HostName,
-                UserName = rabbitMQConfiguration.UserName,
-                Password = rabbitMQConfiguration.Password,
                 DispatchConsumersAsync = true
+
             };
             T obj;
             using (var connection = factory.CreateConnection())
@@ -73,9 +70,9 @@ namespace OniHealth.Domain.Utils
 
                 channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
-                var consumer = new EventingBasicConsumer(channel);
+                var consumer = new AsyncEventingBasicConsumer(channel);
                 var tcs = new TaskCompletionSource<T>();
-                consumer.Received += (model, ea) =>
+                consumer.Received += async (model, ea) =>
                 {
                     var body = ea.Body;
                     var message = Encoding.UTF8.GetString(body.ToArray());
@@ -85,7 +82,7 @@ namespace OniHealth.Domain.Utils
                 };
 
                 channel.BasicConsume(queue: queueName,
-                                     autoAck: false,
+                                     autoAck: true,
                                      consumer: consumer);
                 return await tcs.Task;
             }
@@ -132,19 +129,19 @@ namespace OniHealth.Domain.Utils
         }
 
         #endregion
-        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlRlc3RlIiwibmJmIjoxNjc0ODU4MDE5LCJleHAiOjE2NzQ4NjUyMTksImlhdCI6MTY3NDg1ODAxOX0.aTNeRYeS7rdiRps3jW3zyF1k89_8mjX5fGgg5_wA44E
+        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlRlc3RlIiwibmJmIjoxNjc1MjYwMDU0LCJleHAiOjE2NzUyNjcyNTQsImlhdCI6MTY3NTI2MDA1NH0.ZWgw62RcKVeWi8S3BUi5I6SYFrebQY2VZsNeLApA-kw
 
         //        {
         //  "id": 0,
-        //  "title": "TESTE",
-        //  "consultTimeId": null,
-        //  "consultTypeId": null,
-        //  "customerId": null,
-        //  "doctorId": null,
-        //  "examId": null,
-        //  "customerIsPresent": null,
-        //  "doctorIsPresent": null,
-        //  "isActive": true
+        //  "title": "teste",
+        //  "consulttimeid": null,
+        //  "consulttypeid": null,
+        //  "customerid": null,
+        //  "doctorid": null,
+        //  "examid": null,
+        //  "customerispresent": null,
+        //  "doctorispresent": null,
+        //  "isactive": true
         //}
-    }
+}
 }

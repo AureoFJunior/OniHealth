@@ -31,14 +31,21 @@ namespace OniHealth.Domain.Models
             string queueName = "addConsultQueue";
             while(true)
             {
-                Consult consult = await SharedFunctions.DequeueAsync<Consult>(queueName);
+                Consult consult = await SharedFunctions.DequeueAndProcessAsync<Consult>(queueName);
+
+                if (consult == null)
+                    return;
+
                 Consult existentConsult = _consultRepository.GetById(consult.Id);
 
                 if (existentConsult == null)
                 {
                     await _consultRepository.CreateAsync(consult);
                 }
-                throw new InsertDatabaseException();
+                else
+                {
+                    throw new InsertDatabaseException();
+                }
             }
         }
 
