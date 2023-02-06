@@ -16,12 +16,17 @@ namespace OniHealth.Application.DI
         {
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conection));
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var mapper = MapperConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
             services.AddScoped(typeof(IRepository<User>), typeof(UserRepository));
+            services.AddScoped(typeof(IRepository<Customer>), typeof(CustomerRepository));
+            services.AddScoped(typeof(IRepository<ConsultTime>), typeof(ConsultTimeRepository));
+            services.AddScoped(typeof(IRepository<ConsultType>), typeof(ConsultTypeRepository));
             services.AddScoped(typeof(IRepository<Customer>), typeof(CustomerRepository));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IRepositoryRoles), typeof(RolesRepository));
@@ -34,6 +39,8 @@ namespace OniHealth.Application.DI
             services.AddScoped(typeof(TokenService));
             services.AddScoped(typeof(IUserService<User>), typeof(UserService));
             services.AddScoped(typeof(IConsultService<Consult>), typeof(ConsultService));
+            services.AddScoped(typeof(IConsultTimeService<ConsultTime>), typeof(ConsultTimeService));
+            services.AddScoped(typeof(IConsultTypeService<ConsultType>), typeof(ConsultTypeService));
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 

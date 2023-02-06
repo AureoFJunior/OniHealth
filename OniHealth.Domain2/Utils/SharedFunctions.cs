@@ -58,7 +58,7 @@ namespace OniHealth.Domain.Utils
                 DispatchConsumersAsync = true
 
             };
-            T obj;
+            T obj = default(T);
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -84,7 +84,8 @@ namespace OniHealth.Domain.Utils
                 channel.BasicConsume(queue: queueName,
                                      autoAck: true,
                                      consumer: consumer);
-                return await tcs.Task;
+                await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(2)));
+                return obj;
             }
         }
 
@@ -129,19 +130,5 @@ namespace OniHealth.Domain.Utils
         }
 
         #endregion
-        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlRlc3RlIiwibmJmIjoxNjc1MjYwMDU0LCJleHAiOjE2NzUyNjcyNTQsImlhdCI6MTY3NTI2MDA1NH0.ZWgw62RcKVeWi8S3BUi5I6SYFrebQY2VZsNeLApA-kw
-
-        //        {
-        //  "id": 0,
-        //  "title": "teste",
-        //  "consulttimeid": null,
-        //  "consulttypeid": null,
-        //  "customerid": null,
-        //  "doctorid": null,
-        //  "examid": null,
-        //  "customerispresent": null,
-        //  "doctorispresent": null,
-        //  "isactive": true
-        //}
 }
 }

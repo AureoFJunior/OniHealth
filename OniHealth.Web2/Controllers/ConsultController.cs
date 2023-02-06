@@ -13,6 +13,7 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using OniHealth.Domain.Utils;
+using System;
 
 namespace OniHealth.Web.Controllers
 {
@@ -21,17 +22,23 @@ namespace OniHealth.Web.Controllers
     public class ConsultController : Controller
     {
         private readonly IConsultService<Consult> _consultService;
+        private readonly IConsultTimeService<ConsultTime> _consultTimeService;
+        private readonly IConsultTypeService<ConsultType> _consultTypeService;
         private readonly IRepositoryConsult _consultRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
         public ConsultController(IRepositoryConsult consultRepository,
             IConsultService<Consult> consultService,
+            IConsultTimeService<ConsultTime> consultTimeService,
+            IConsultTypeService<ConsultType> consultTypeService,
             IMapper mapper,
             IValidator validator)
         {
             _consultService = consultService;
             _consultRepository = consultRepository;
+            _consultTimeService = consultTimeService;
+            _consultTypeService = consultTypeService;
             _mapper = mapper;
             _validator = validator;
         }
@@ -73,21 +80,51 @@ namespace OniHealth.Web.Controllers
             return Ok(consultDTO);
         }
 
+        #region Add Consult Methods
         /// <summary>
         /// Add a new consult
         /// </summary>
-        /// <param name="consultDTO">Consult's to be added</param>
+        /// <param name="consultInsertDTO">Consult's to be added</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddConsult([FromBody] ConsultDTO consultDTO)
+        public async Task<IActionResult> AddConsult([FromBody] ConsultInsertDTO consultInsertDTO)
         {
             string queueName = "addConsultQueue";
-            Consult consult = _mapper.Map<Consult>(consultDTO);
+
+            ConsultTime consultTime = await AddConsultTime();
+            ConsultType consultType = await AddConsultType(consultInsertDTO);
+
+            Consult consult = ConvertToConsult(consultInsertDTO, consultTime, consultType);
             await SharedFunctions.EnqueueAsync(consult, queueName);
-            Consult createdConsult = new Consult();
-            await _consultService.CreateAsync();
+            await _consultService.CreateAsync(queueName);
             return Ok();
         }
+
+        private Consult ConvertToConsult(ConsultInsertDTO consultInsertDTO, ConsultTime consultTime, ConsultType consultType)
+        {
+            consultInsertDTO.Consult.ConsultTimeId = consultTime.Id;
+            consultInsertDTO.Consult.ConsultTypeId = consultType.Id;
+
+            Consult consult = _mapper.Map<Consult>(consultInsertDTO.Consult);
+            return consult;
+        }
+
+        private async Task<ConsultType> AddConsultType(ConsultInsertDTO consultInsertDTO)
+        {
+            string queueName = "addConsultTypeQueue";
+            ConsultType consultType = _mapper.Map<ConsultType>(consultInsertDTO.ConsultType);
+            await SharedFunctions.EnqueueAsync(consultType, queueName);
+            return await _consultTypeService.CreateAsync(queueName);
+        }
+
+        private async Task<ConsultTime> AddConsultTime()
+        {
+            string queueName = "addConsultTimeQueue";
+            await SharedFunctions.EnqueueAsync(new ConsultTime() { AppointmentTime = DateTime.Now }, queueName);
+            return await _consultTimeService.CreateAsync(queueName);
+        }
+
+        #endregion
 
         /// <summary>
         /// Update an consult
