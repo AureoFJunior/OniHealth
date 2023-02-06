@@ -21,7 +21,7 @@ namespace OniHealth.Infra.Repositories
         #region Sync
         public virtual TEntity GetById(int id)
         {
-            var query = _context.Set<TEntity>().Where(e => e.Id == id);
+            var query = _context.Set<TEntity>().Where(e => e.Id == id).AsNoTracking();
 
             if (query.Any())
                 return query.FirstOrDefault();
@@ -34,7 +34,7 @@ namespace OniHealth.Infra.Repositories
             var query = _context.Set<TEntity>();
 
             if (query.Any())
-                return query.ToList();
+                return query.AsNoTracking().ToList();
 
             return new List<TEntity>();
         }

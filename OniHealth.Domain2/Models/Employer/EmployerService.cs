@@ -30,7 +30,7 @@ namespace OniHealth.Domain.Models
             Employer existentEmployer = _employerRepository.GetById(employer.Id);
             Employer updatedEmployer = new Employer();
 
-            if (employer != null)
+            if (existentEmployer != null)
             {
                 updatedEmployer = _employerRepository.Update(employer);
                 return updatedEmployer;
