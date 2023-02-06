@@ -11,6 +11,7 @@ namespace OniHealth.Infra.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            AppDbContextIndex.Configure(modelBuilder);
             #region Consult
 
             modelBuilder.Entity<Consult>(entity =>

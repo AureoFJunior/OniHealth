@@ -13,22 +13,8 @@ namespace OniHealth.Domain.Models
             _consultRepository = consultRepository;
         }
 
-        //public async Task<Consult> CreateAsync(Consult consult)
-        //{
-        //    Consult existentConsult = _consultRepository.GetById(consult.Id);
-        //    Consult includedConsult = new Consult();
-
-        //    if (existentConsult == null)
-        //    {
-        //        includedConsult = await _consultRepository.CreateAsync(consult);
-        //        return includedConsult;
-        //    }
-        //    throw new InsertDatabaseException();
-        //}
-
-        public async Task CreateAsync()
+        public async Task CreateAsync(string queueName)
         {
-            string queueName = "addConsultQueue";
             while(true)
             {
                 Consult consult = await SharedFunctions.DequeueAndProcessAsync<Consult>(queueName);
@@ -54,7 +40,7 @@ namespace OniHealth.Domain.Models
             Consult existentConsult = _consultRepository.GetById(consult.Id);
             Consult updatedConsult = new Consult();
 
-            if (consult != null)
+            if (existentConsult != null)
             {
                 updatedConsult = _consultRepository.Update(consult);
                 return updatedConsult;

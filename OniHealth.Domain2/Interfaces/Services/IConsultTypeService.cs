@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace OniHealth.Domain.Interfaces.Services
 {
-    public interface IConsultService<TEntity> where TEntity : class
+    public interface IConsultTypeService<TEntity> where TEntity : class
     {
         #region Sync
-        TEntity Delete(int id);
-        TEntity Update(Consult consult);
         #endregion
 
         #region Async
-        Task CreateAsync(string queueName);
+        Task<ConsultType> CreateAsync(string queueName);
         #endregion
     }
 }
