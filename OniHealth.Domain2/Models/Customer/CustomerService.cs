@@ -31,7 +31,7 @@ namespace OniHealth.Domain.Models
             Customer existentCustomer = _customerRepository.GetById(customer.Id);
             Customer updatedCustomer = new Customer();
 
-            if (customer != null)
+            if (existentCustomer != null)
             { 
                 updatedCustomer = _customerRepository.Update(customer);
                 return updatedCustomer;

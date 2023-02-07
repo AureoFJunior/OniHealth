@@ -34,7 +34,7 @@ namespace OniHealth.Infra.Repositories
             var query = _context.Set<TEntity>().AsNoTracking();
 
             if (query.Any())
-                return query.ToList();
+                return query.AsNoTracking().ToList();
 
             return new List<TEntity>();
         }
