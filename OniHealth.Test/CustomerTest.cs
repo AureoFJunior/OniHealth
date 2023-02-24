@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OniHealth.Infra.Repositories;
 using System.Xml.Serialization;
 using Xunit;
+using OniHealth.Domain.Enums;
 
 namespace OniHealth.Test
 {
@@ -38,7 +39,7 @@ namespace OniHealth.Test
         [Fact]
         public async void CreateAsync()
         {
-            Customer customer = new Customer("Customer", "customerTeste@gmail.com", new DateTime(2002, 1, 18).ToUniversalTime(), 1, true, "999999999", new DateTime(2006, 6, 25).ToUniversalTime());
+            Customer customer = new Customer("Customer", "customerTeste@gmail.com", new DateTime(2002, 1, 18).ToUniversalTime(), 9, true, "999999999", new DateTime(2006, 6, 25).ToUniversalTime());
             Assert.NotNull(await _customerService.CreateAsync(customer));
         }
 
