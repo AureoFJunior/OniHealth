@@ -101,6 +101,7 @@ namespace OniHealth.Infra.Context
         #region DbSets
         public DbSet<Employer> Employer { get; set; }
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<Plans> Plans { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Consult> Consult { get; set; }

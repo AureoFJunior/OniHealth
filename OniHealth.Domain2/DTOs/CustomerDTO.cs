@@ -17,7 +17,7 @@ namespace OniHealth.Domain.DTOs
         public DateTime BirthDate { get; set; }
 
         [Required]
-        public short SignedPlan { get; set; }
+        public int SignedPlanId { get; set; }
 
         [Required]
         public bool IsDependent { get; set; }
