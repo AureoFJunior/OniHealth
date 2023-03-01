@@ -80,6 +80,36 @@ namespace OniHealth.Web.Controllers
             return Ok(consultDTO);
         }
 
+        /// <summary>
+        /// Set late consults appointments.
+        /// </summary>
+        /// <returns>The setted consults appointments.</returns>
+        [HttpGet]
+        public async Task<IActionResult> SetLateConsultAppointments()
+        {
+            IEnumerable<ConsultAppointmentDTO> consultAppointmentsDTO = new List<ConsultAppointmentDTO>();
+            IEnumerable<ConsultAppointment> consultAppointments = await _consultRepository.SetLateConsultAppointments();
+            if (SharedFunctions.IsNotNullOrEmpty(consultAppointments) == false)
+                consultAppointmentsDTO = _mapper.Map<IEnumerable<ConsultAppointment>, IEnumerable<ConsultAppointmentDTO>>(consultAppointments);
+                
+            return Ok(consultAppointmentsDTO);
+        }
+
+        /// <summary>
+        /// Get cached late consults appointments.
+        /// </summary>
+        /// <returns>The consult the cached late consult appointments.</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetCachedLateConsultAppointments()
+        {
+            IEnumerable<ConsultAppointmentDTO> consultAppointmentsDTO = new List<ConsultAppointmentDTO>();
+            IEnumerable<ConsultAppointment> consultAppointments = await _consultRepository.GetCachedLateConsultAppointments();
+            if (SharedFunctions.IsNotNullOrEmpty(consultAppointments) == false)
+                consultAppointmentsDTO = _mapper.Map<IEnumerable<ConsultAppointment>, IEnumerable<ConsultAppointmentDTO>>(consultAppointments);
+
+            return Ok(consultAppointmentsDTO);
+        }
+
         #region Add Consult Methods
         /// <summary>
         /// Add a new consult
@@ -104,8 +134,10 @@ namespace OniHealth.Web.Controllers
         {
             consultInsertDTO.Consult.ConsultTimeId = consultTime.Id;
             consultInsertDTO.Consult.ConsultTypeId = consultType.Id;
+            ConsultDTO consultConvert = consultInsertDTO.Consult;
 
-            Consult consult = _mapper.Map<Consult>(consultInsertDTO.Consult);
+            Consult consult = _mapper.Map<Consult>(consultConvert);
+            consult.IsActive = consultConvert.IsActive;
             return consult;
         }
 

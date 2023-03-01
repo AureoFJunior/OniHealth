@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Models;
 using OniHealth.Infra.Context;
@@ -69,6 +71,20 @@ namespace OniHealth.Infra.Repositories
 
         public virtual TEntity Delete(TEntity entity)
         {
+            _context.Set<TEntity>().Remove(entity);
+            unitOfWork.Commit();
+            return entity;
+        }
+
+        public virtual TEntity Delete<TInclude>(TEntity entity, params Expression<Func<TEntity, TInclude>>[] includeProperties)
+        {
+            var set = _context.Set<TEntity>().AsQueryable();
+
+            foreach (var includeProperty in includeProperties)
+            {
+                set = set.Include(includeProperty);
+            }
+
             _context.Set<TEntity>().Remove(entity);
             unitOfWork.Commit();
             return entity;

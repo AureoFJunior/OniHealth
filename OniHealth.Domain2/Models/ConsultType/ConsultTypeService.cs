@@ -41,5 +41,19 @@ namespace OniHealth.Domain.Models
             else
                 return null;
         }
+
+        public ConsultType Delete(int id)
+        {
+            ConsultType consultType = _consultTypeRepository.GetById(id);
+            ConsultType deletedConsultType = new ConsultType();
+
+            if (consultType != null)
+            {
+                deletedConsultType = _consultTypeRepository.Delete(consultType);
+                return deletedConsultType;
+            }
+            else
+                return null;
+        }
     }
 }

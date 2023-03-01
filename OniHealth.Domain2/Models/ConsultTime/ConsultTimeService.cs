@@ -41,5 +41,19 @@ namespace OniHealth.Domain.Models
             else
                 return null;
         }
+
+        public ConsultTime Delete(int id)
+        {
+            ConsultTime consultTime = _consultTimeRepository.GetById(id);
+            ConsultTime deletedConsultTime = new ConsultTime();
+
+            if (consultTime != null)
+            {
+                deletedConsultTime = _consultTimeRepository.Delete(consultTime);
+                return deletedConsultTime;
+            }
+            else
+                return null;
+        }
     }
 }
