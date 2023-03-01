@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OniHealth.Web", "OniHealth.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OniHealth.Test", "OniHealth.Test\OniHealth.Test.csproj", "{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OniHealth.Worker2", "OniHealth.Worker2\OniHealth.Worker2.csproj", "{12233E07-1ABB-4D12-8638-9CF944C0B9FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,18 @@ Global
 		{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}.Release|x64.Build.0 = Release|Any CPU
 		{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{7FD7A886-5CD2-4B3A-B537-BE5903A1A3C6}.Release|x86.Build.0 = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|x64.Build.0 = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Debug|x86.Build.0 = Debug|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|x64.ActiveCfg = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|x64.Build.0 = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{12233E07-1ABB-4D12-8638-9CF944C0B9FD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
 using OniHealth.Domain.Utils;
+using System.Security.Cryptography.X509Certificates;
 
 namespace OniHealth.Domain.Models
 {
@@ -56,7 +57,7 @@ namespace OniHealth.Domain.Models
 
             if (consult != null)
             {
-                deletedConsult = _consultRepository.Delete(consult);
+                deletedConsult = _consultRepository.Delete<object>(consult, c => c.ConsultTime, d => d.ConsultType, e => e.Exam);
                 return deletedConsult;
             }
             else

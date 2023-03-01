@@ -17,6 +17,8 @@ namespace OniHealth.Web.Config
                 config.CreateMap<User, UserDTO>().ReverseMap();
                 config.CreateMap<Consult, ConsultDTO>().ReverseMap();
                 config.CreateMap<ConsultType, ConsultTypeDTO>().ReverseMap();
+                config.CreateMap<ConsultTime, ConsultTimeDTO>().ReverseMap();
+                config.CreateMap<ConsultAppointment, ConsultAppointmentDTO>().ReverseMap();
             });
 
             return mappingsConfigs;

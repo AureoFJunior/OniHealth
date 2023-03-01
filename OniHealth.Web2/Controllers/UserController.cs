@@ -11,6 +11,7 @@ using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
 using AutoMapper;
 using OniHealth.Web.Config;
+using OniHealth.Infra.Repositories;
 
 namespace OniHealth.Web.Controllers
 {
@@ -20,16 +21,19 @@ namespace OniHealth.Web.Controllers
     {
         private readonly IUserService<User> _userService;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepositoryConsult _consultRepository;
         private readonly IMapper _mapper;
         private readonly IValidator _validator;
 
         public UserController(IUserService<User> userService,
             IRepository<User> userRepository,
+            IRepositoryConsult consultRepository,
             IMapper mapper,
             IValidator validator)
         {
             _userService = userService;
             _userRepository = userRepository;
+            _consultRepository = consultRepository;
             _mapper = mapper;
             _validator = validator;
         }
@@ -77,7 +81,7 @@ namespace OniHealth.Web.Controllers
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
-                LastName = user.LastName,
+                LastName =  user.LastName,
                 Email = user.Email,
                 BirthDate = user.BirthDate,
                 Token = token,

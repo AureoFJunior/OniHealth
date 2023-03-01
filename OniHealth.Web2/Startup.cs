@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +41,6 @@ namespace OniHealth.Web
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddCors();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OniHealth", Version = "v1" });
@@ -93,7 +93,6 @@ namespace OniHealth.Web
                       ValidateAudience = false
                   };
               });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

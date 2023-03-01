@@ -11,6 +11,13 @@ namespace OniHealth.Domain.Interfaces.Repositories
         #endregion
 
         #region Async
+        Task<IEnumerable<Consult>> GetAllAsync();
+        Task<Consult> GetByIdAsync(int id);
+        Task<IEnumerable<ConsultAppointment>> GetCachedLateConsultAppointments();
+        Task<IEnumerable<ConsultAppointment>> GetConsultAppointments();
+        Task<IEnumerable<ConsultAppointment>> GetFromQueueLateConsultAppointments();
+        Task<IEnumerable<ConsultAppointment>> GetLateConsultAppointments();
+        Task<IEnumerable<ConsultAppointment>> SetLateConsultAppointments();
         #endregion
     }
 }

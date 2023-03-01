@@ -10,6 +10,8 @@ namespace OniHealth.Domain.Interfaces.Services
 
         #region Async
         Task<ConsultTime> CreateAsync(string queueName);
+        ConsultTime Delete(int id);
+        ConsultTime Update(ConsultTime consultTime);
         #endregion
     }
 }

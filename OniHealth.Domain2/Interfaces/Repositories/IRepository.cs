@@ -12,6 +12,7 @@ namespace OniHealth.Domain.Interfaces.Repositories
         TEntity Update(TEntity entity);
         IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entitys);
         TEntity Delete(TEntity entity);
+        TEntity Delete<TInclude>(TEntity entity, params System.Linq.Expressions.Expression<Func<TEntity, TInclude>>[] includeProperties);
         IEnumerable<TEntity> DeleteRange(IEnumerable<TEntity> entitys);
         #endregion
 

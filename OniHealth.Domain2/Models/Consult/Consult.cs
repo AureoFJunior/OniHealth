@@ -11,7 +11,7 @@ namespace OniHealth.Domain.Models
         {
             ValidateCategory(title);
             Title = title;
-            isActive = isActive;
+            IsActive = isActive;
             ConsultTypeId = consultTypeId;
             ConsultTimeId = consultTimeId;
             CustomerId = customerId;
