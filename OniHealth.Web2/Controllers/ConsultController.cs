@@ -96,6 +96,21 @@ namespace OniHealth.Web.Controllers
         }
 
         /// <summary>
+        /// Get late consults appointments from queue.
+        /// </summary>
+        /// <returns>The getted late consults appointments from queue.</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetFromQueueLateConsultAppointments()
+        {
+            IEnumerable<ConsultAppointmentDTO> consultAppointmentsDTO = new List<ConsultAppointmentDTO>();
+            IEnumerable<ConsultAppointment> consultAppointments = await _consultRepository.GetFromQueueLateConsultAppointments();
+            if (SharedFunctions.IsNotNullOrEmpty(consultAppointments) == false)
+                consultAppointmentsDTO = _mapper.Map<IEnumerable<ConsultAppointment>, IEnumerable<ConsultAppointmentDTO>>(consultAppointments);
+
+            return Ok(consultAppointmentsDTO);
+        }
+
+        /// <summary>
         /// Get cached late consults appointments.
         /// </summary>
         /// <returns>The consult the cached late consult appointments.</returns>
