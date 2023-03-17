@@ -119,6 +119,35 @@ namespace OniHealth.Infra.Migrations
                     b.ToTable("ConsultType");
                 });
 
+            modelBuilder.Entity("OniHealth.Domain.Models.Plans", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
+
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                b.Property<string>("Details")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                b.Property<string>("TotalValue")
+                    .IsRequired()
+                    .HasColumnType("integer");
+
+                b.Property<string>("HasEmergency")
+                    .IsRequired()
+                    .HasColumnType("boolean");
+
+                b.HasKey("Id");
+
+                b.ToTable("Plans");
+            });
+
             modelBuilder.Entity("OniHealth.Domain.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -148,7 +177,7 @@ namespace OniHealth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<short>("SignedPlan")
+                    b.Property<short>("SignedPlanId")
                         .HasColumnType("smallint");
 
                     b.HasKey("Id");
