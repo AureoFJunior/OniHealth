@@ -10,14 +10,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OniHealth.Domain.Utils
+namespace OniHealth.Worker2.Utils
 {
-    public static class SharedFunctions
+    public static class WorkerSharedFunctions
     {
         private static readonly HttpClient _httpClient;
         private static readonly string _apiBaseUrl;
 
-        static SharedFunctions()
+        static WorkerSharedFunctions()
         {
             _apiBaseUrl = "http://localhost:8080/api/";
             _httpClient = new HttpClient();
@@ -107,7 +107,7 @@ namespace OniHealth.Domain.Utils
                 DispatchConsumersAsync = true
 
             };
-            T obj = default(T);
+            T obj = default;
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -139,11 +139,11 @@ namespace OniHealth.Domain.Utils
 
         public static async Task<T> DequeueAsync<T>(string queueName)
         {
-            var dequeuedObject = await SharedFunctions.Dequeue<T>(queueName);
+            var dequeuedObject = await Dequeue<T>(queueName);
             return dequeuedObject;
         }
 
-         private static async Task<IEnumerable<T>> DequeueList<T>(string queueName)
+        private static async Task<IEnumerable<T>> DequeueList<T>(string queueName)
         {
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
@@ -152,7 +152,7 @@ namespace OniHealth.Domain.Utils
                 DispatchConsumersAsync = true
 
             };
-            IEnumerable<T> obj = default(IEnumerable<T>);
+            IEnumerable<T> obj = default;
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -173,7 +173,7 @@ namespace OniHealth.Domain.Utils
                     obj.Append(JsonConvert.DeserializeObject<T>(message));
                     channel.BasicAck(ea.DeliveryTag, false);
 
-                    if(SharedFunctions.IsNotNullOrEmpty(obj))
+                    if (IsNotNullOrEmpty(obj))
                         tcs.SetResult(true);
                 };
 
@@ -187,7 +187,7 @@ namespace OniHealth.Domain.Utils
 
         public static async Task<IEnumerable<T>> DequeueListAsync<T>(string queueName)
         {
-            var dequeuedObject = await SharedFunctions.Dequeue<IEnumerable<T>>(queueName);
+            var dequeuedObject = await Dequeue<IEnumerable<T>>(queueName);
             return dequeuedObject;
         }
 
@@ -200,7 +200,7 @@ namespace OniHealth.Domain.Utils
                 DispatchConsumersAsync = true
 
             };
-            T obj = default(T);
+            T obj = default;
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
@@ -233,7 +233,7 @@ namespace OniHealth.Domain.Utils
 
         public static async Task<T> DequeueAndProcessAsync<T>(string queueName)
         {
-            var dequeuedObject = await SharedFunctions.DequeueAndProcess<T>(queueName);
+            var dequeuedObject = await DequeueAndProcess<T>(queueName);
             return dequeuedObject;
         }
         #endregion
@@ -247,7 +247,7 @@ namespace OniHealth.Domain.Utils
         public static T SafeConvertToNumber<T>(string input) where T : struct
         {
             if (string.IsNullOrEmpty(input))
-                return default(T);
+                return default;
             if (typeof(T) == typeof(int))
             {
                 if (int.TryParse(input, out int result))
@@ -263,7 +263,7 @@ namespace OniHealth.Domain.Utils
                 if (long.TryParse(input, out long result))
                     return (T)(object)result;
             }
-            return default(T);
+            return default;
         }
 
         public static bool IsDateBetween(DateTime input, DateTime start, DateTime end)

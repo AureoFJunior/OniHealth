@@ -6,7 +6,7 @@ namespace OniHealth.Infra.Context
 {
     public class AppDbContextIndex
     {
-        public static  void Configure(ModelBuilder builder)
+        public static void Configure(ModelBuilder builder)
         {
             #region Consult
             builder.Entity<Consult>()

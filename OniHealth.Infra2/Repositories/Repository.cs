@@ -78,11 +78,9 @@ namespace OniHealth.Infra.Repositories
 
         public virtual TEntity Delete<TInclude>(TEntity entity, params Expression<Func<TEntity, TInclude>>[] includeProperties)
         {
-            var set = _context.Set<TEntity>().AsQueryable();
-
             foreach (var includeProperty in includeProperties)
             {
-                set = set.Include(includeProperty);
+                _context.Set<TEntity>().Include(includeProperty);
             }
 
             _context.Set<TEntity>().Remove(entity);
