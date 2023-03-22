@@ -25,6 +25,7 @@ namespace OniHealth.Domain.Models
             if (existentPlan == null)
             {
                 includedPlan = await _customerRepository.CreateAsync(plan);
+                await _customerRepository.CommitAsync();
                 return includedPlan;
             }
 
@@ -39,6 +40,7 @@ namespace OniHealth.Domain.Models
             if (existentPlan != null)
             {
                 updatedPlan = _customerRepository.Update(plan);
+                _customerRepository.Commit();
                 return updatedPlan;
             }
             else
@@ -53,6 +55,7 @@ namespace OniHealth.Domain.Models
             if (plan != null)
             {
                 deletedPlan = _customerRepository.Delete(plan);
+                _customerRepository.Commit();
                 return deletedPlan;
             }
             else

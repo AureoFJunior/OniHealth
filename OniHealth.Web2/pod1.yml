@@ -7,14 +7,15 @@ spec:
    - name: secret/dockerk    
   containers:
    - name: cont-onihealthweb
-     image: aureofjunior/onihealhtweb:latest
+     image: aureofjunior/onihealthweb:latest
      ports:
      - containerPort: 8080
    - name: cont-rabbitmq
      image: rabbitmq
      ports:
      - containerPort: 15672
-   - name: cont-wk-late-consult
-     image: aureofjunior/wk_late_consult:latest
-     ports:
-     - containerPort: 8081
+   #- name: cont-wk-late-consult
+   #  image: aureofjunior/wk_late_consult:latest
+   #  ports:
+   #  - containerPort: 8081
+  restartPolicy: OnFailure

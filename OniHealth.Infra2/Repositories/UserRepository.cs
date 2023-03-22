@@ -9,10 +9,8 @@ namespace OniHealth.Infra.Repositories
 {
     public class UserRepository : Repository<User>
     {
-        private readonly UnitOfWork unitOfWork;
         public UserRepository(AppDbContext context) : base(context)
         {
-            unitOfWork = new UnitOfWork(context);
         }
 
         public async override Task<User> GetByIdAsync(int id)

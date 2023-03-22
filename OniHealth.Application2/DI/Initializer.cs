@@ -44,7 +44,7 @@ namespace OniHealth.Application.DI
             services.AddScoped(typeof(IConsultTimeService<ConsultTime>), typeof(ConsultTimeService));
             services.AddScoped(typeof(IConsultTypeService<ConsultType>), typeof(ConsultTypeService));
 
-            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IUnitOfWork<AppDbContext>), typeof(UnitOfWork<AppDbContext>));
 
             services.AddScoped(typeof(IValidator), typeof(Validator));
         }

@@ -23,9 +23,12 @@ namespace OniHealth.Domain.Models
             ConsultTime existentConsultTime = _consultTimeRepository.GetById(consult.Id);
 
             if (existentConsultTime == null)
-                return  await _consultTimeRepository.CreateAsync(consult);
-
-                throw new InsertDatabaseException();
+            {
+                ConsultTime consultTime = await _consultTimeRepository.CreateAsync(consult);
+                await _consultTimeRepository.CommitAsync();
+                return consult;
+            }
+            throw new InsertDatabaseException();
         }
 
         public ConsultTime Update(ConsultTime consultTime)
@@ -36,6 +39,7 @@ namespace OniHealth.Domain.Models
             if (existentConsultTime != null)
             {
                 updatedConsultTime = _consultTimeRepository.Update(consultTime);
+                _consultTimeRepository.Commit();
                 return updatedConsultTime;
             }
             else
@@ -50,6 +54,7 @@ namespace OniHealth.Domain.Models
             if (consultTime != null)
             {
                 deletedConsultTime = _consultTimeRepository.Delete(consultTime);
+                _consultTimeRepository.Commit();
                 return deletedConsultTime;
             }
             else

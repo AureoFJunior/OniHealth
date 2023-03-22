@@ -12,11 +12,9 @@ namespace OniHealth.Infra.Repositories
 {
     public class CustomerRepository : Repository<Customer>
     {
-        private readonly UnitOfWork _unitOfWork;
 
         public CustomerRepository(AppDbContext context) : base(context)
         {
-            _unitOfWork = new UnitOfWork(context);
         }
 
         public async Task<Customer> GetByIdAsync(int id)

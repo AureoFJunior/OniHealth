@@ -1,5 +1,7 @@
+using OniHealth.Domain.Interfaces;
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
+using System;
 
 namespace OniHealth.Domain.Models
 {
@@ -20,6 +22,7 @@ namespace OniHealth.Domain.Models
             if (existentEmployer == null)
             {
                 includedEmployer = await _employerRepository.CreateAsync(employer);
+                await _employerRepository.CommitAsync();
                 return includedEmployer;
             }
             throw new InsertDatabaseException();
@@ -33,6 +36,7 @@ namespace OniHealth.Domain.Models
             if (existentEmployer != null)
             {
                 updatedEmployer = _employerRepository.Update(employer);
+                _employerRepository.Commit();
                 return updatedEmployer;
             }
             else
@@ -47,6 +51,7 @@ namespace OniHealth.Domain.Models
             if (employer != null)
             {
                 deletedEmployer = _employerRepository.Delete(employer);
+                _employerRepository.Commit();
                 return deletedEmployer;
             }
             else

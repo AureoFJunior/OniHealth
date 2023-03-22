@@ -6,6 +6,7 @@ namespace OniHealth.Domain.Interfaces.Repositories
     public interface IRepository<TEntity> where TEntity : class
     {
         #region Sync
+        void Commit(CancellationToken cancellation = default);
         TEntity GetById(int id);
         IEnumerable<TEntity> GetAll();
         TEntity Create(TEntity entity);
@@ -17,6 +18,7 @@ namespace OniHealth.Domain.Interfaces.Repositories
         #endregion
 
         #region Async
+        Task CommitAsync(CancellationToken cancellation = default);
         Task<int> GetLastId();
         Task<TEntity> GetByIdAsync(int id);
         Task<IEnumerable<TEntity>> GetAllAsync();
