@@ -16,6 +16,7 @@ namespace OniHealth.Worker2
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await Console.Out.WriteLineAsync($"Starting late consults worker... at {DateTime.Now}");
+
             MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
             var cacheKey = "consultAppointments";
 

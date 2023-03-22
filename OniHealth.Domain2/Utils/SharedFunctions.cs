@@ -290,7 +290,6 @@ namespace OniHealth.Domain.Utils
         #endregion
 
         #region HTTP/HTTPS
-
         public static async Task<object> GetAsync(string apiEndpoint, string parameters = "", string token = "")
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_apiBaseUrl}/{apiEndpoint}/{parameters}");
