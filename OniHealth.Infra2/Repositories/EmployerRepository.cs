@@ -8,10 +8,8 @@ namespace OniHealth.Infra.Repositories
 {
     public class EmployerRepository : Repository<Employer>
     {
-        private readonly UnitOfWork unitOfWork;
         public EmployerRepository(AppDbContext context) : base(context)
         {
-            unitOfWork = new UnitOfWork(context);
         }
 
         public async override Task<Employer> GetByIdAsync(int id)

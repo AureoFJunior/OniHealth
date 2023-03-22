@@ -20,6 +20,7 @@ namespace OniHealth.Domain.Models
             if (existentRoles == null)
             {
                 includedRoles = await _employerRepository.CreateAsync(roles);
+                await _employerRepository.CommitAsync();
                 return includedRoles;
             }
             throw new InsertDatabaseException();
@@ -33,6 +34,7 @@ namespace OniHealth.Domain.Models
             if (roles != null)
             {
                 updatedRoles = _employerRepository.Update(roles);
+                _employerRepository.Commit();
                 return updatedRoles;
             }
             return null;
@@ -46,6 +48,7 @@ namespace OniHealth.Domain.Models
             if (roles != null)
             {
                 deletedRoles = _employerRepository.Delete(roles);
+                _employerRepository.Commit();
                 return deletedRoles;
             }
             return null;

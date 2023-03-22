@@ -20,6 +20,7 @@ namespace OniHealth.Domain.Models
             if (existentCustomer == null)
             {
                 includedCustomer = await _customerRepository.CreateAsync(customer);
+                await _customerRepository.CommitAsync();
                 return includedCustomer;
             }
 
@@ -34,6 +35,7 @@ namespace OniHealth.Domain.Models
             if (existentCustomer != null)
             { 
                 updatedCustomer = _customerRepository.Update(customer);
+                _customerRepository.Commit();
                 return updatedCustomer;
             }
             else
@@ -48,6 +50,7 @@ namespace OniHealth.Domain.Models
             if (customer != null)
             {
                 deletedCustomer = _customerRepository.Delete(customer);
+                _customerRepository.Commit();
                 return deletedCustomer;
             }
             else

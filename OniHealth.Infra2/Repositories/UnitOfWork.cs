@@ -4,7 +4,7 @@ using OniHealth.Infra.Context;
 
 namespace OniHealth.Infra.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : AppDbContext
     {
         private readonly AppDbContext _context;
 
@@ -13,14 +13,16 @@ namespace OniHealth.Infra.Repositories
             _context = context;
         }
 
-        public void Commit()
+        public void Commit(CancellationToken cancellationToken = default)
         {
-            _context.SaveChanges();
+            if (_context.ChangeTracker.HasChanges())
+                _context.SaveChanges();
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync();
+            if (_context.ChangeTracker.HasChanges())
+                await _context.SaveChangesAsync();
         }
     }
 }

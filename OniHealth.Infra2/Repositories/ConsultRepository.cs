@@ -12,10 +12,8 @@ namespace OniHealth.Infra.Repositories
 {
     public class ConsultRepository : Repository<Consult>, IRepositoryConsult
     {
-        private readonly UnitOfWork unitOfWork;
         public ConsultRepository(AppDbContext context) : base(context)
         {
-            unitOfWork = new UnitOfWork(context);
         }
 
         public async override Task<Consult> GetByIdAsync(int id)

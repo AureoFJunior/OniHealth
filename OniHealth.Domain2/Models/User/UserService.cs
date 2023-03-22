@@ -20,6 +20,7 @@ namespace OniHealth.Domain.Models
             if (existentUser == null)
             {
                 includedUser = await _userRepository.CreateAsync(user);
+                await _userRepository.CommitAsync();
                 return includedUser;
             }
             throw new InsertDatabaseException();
@@ -33,6 +34,7 @@ namespace OniHealth.Domain.Models
             if (existentUser != null)
             {
                 updatedUser = _userRepository.Update(user);
+                _userRepository.Commit();
                 return updatedUser;
             }
 
@@ -48,6 +50,7 @@ namespace OniHealth.Domain.Models
             if (user != null)
             {
                 deletedUser = _userRepository.Delete(user);
+                _userRepository.Commit();
                 return deletedUser;
             }
             throw new NotFoundDatabaseException();
