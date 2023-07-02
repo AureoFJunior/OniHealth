@@ -7,7 +7,7 @@ namespace OniHealth.Domain.Models
     {
         public RabbitMQConfiguration()
         {
-            HostName= "172.17.0.2";
+            HostName= "172.17.0.2"; //localhost??
             UserName = "guest";
             Password = "guest";
             VirtualHost= "/";

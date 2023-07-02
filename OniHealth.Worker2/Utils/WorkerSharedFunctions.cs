@@ -15,11 +15,11 @@ namespace OniHealth.Worker2.Utils
     public static class WorkerSharedFunctions
     {
         private static readonly HttpClient _httpClient;
-        private static readonly string _apiBaseUrl;
+        private static string _defaultApiUrl;
 
         static WorkerSharedFunctions()
         {
-            _apiBaseUrl = "http://localhost:8080/api/";
+            _defaultApiUrl = "http://localhost:80/api";
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -291,9 +291,11 @@ namespace OniHealth.Worker2.Utils
 
         #region HTTP/HTTPS
 
-        public static async Task<object> GetAsync(string apiEndpoint, string parameters = "", string token = "")
+        public static async Task<object> GetAsync(string apiEndpoint, string parameters = "", string token = "", string apiBaseUrl = "")
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_apiBaseUrl}/{apiEndpoint}/{parameters}");
+            apiBaseUrl = string.IsNullOrEmpty(apiBaseUrl) ? _defaultApiUrl : apiBaseUrl;
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{apiBaseUrl}/{apiEndpoint}/{parameters}");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.SendAsync(request);
@@ -308,12 +310,13 @@ namespace OniHealth.Worker2.Utils
             return null;
         }
 
-        public static async Task<object> PostAsync(string apiEndpoint, object resource)
+        public static async Task<object> PostAsync(string apiEndpoint, object resource, string apiBaseUrl = "")
         {
+            apiBaseUrl = string.IsNullOrEmpty(apiBaseUrl) ? _defaultApiUrl : apiBaseUrl;
             var serializedResource = JsonConvert.SerializeObject(resource);
             var content = new StringContent(serializedResource, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/{apiEndpoint}", content);
+            var response = await _httpClient.PostAsync($"{apiBaseUrl}/{apiEndpoint}", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -324,19 +327,21 @@ namespace OniHealth.Worker2.Utils
             return null;
         }
 
-        public static async Task<bool> PutAsync(string apiEndpoint, string parameters, object updatedResource)
+        public static async Task<bool> PutAsync(string apiEndpoint, string parameters, object updatedResource, string apiBaseUrl = "")
         {
+            apiBaseUrl = string.IsNullOrEmpty(apiBaseUrl) ? _defaultApiUrl : apiBaseUrl;
             var serializedResource = JsonConvert.SerializeObject(updatedResource);
             var content = new StringContent(serializedResource, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync($"{_apiBaseUrl}/{apiEndpoint}/{parameters}", content);
+            var response = await _httpClient.PutAsync($"{apiBaseUrl}/{apiEndpoint}/{parameters}", content);
 
             return response.IsSuccessStatusCode;
         }
 
-        public static async Task<bool> DeleteAsync(string apiEndpoint, string parameters)
+        public static async Task<bool> DeleteAsync(string apiEndpoint, string parameters, string apiBaseUrl = "")
         {
-            var response = await _httpClient.DeleteAsync($"{_apiBaseUrl}/{apiEndpoint}/{parameters}");
+            apiBaseUrl = string.IsNullOrEmpty(apiBaseUrl) ? _defaultApiUrl : apiBaseUrl;
+            var response = await _httpClient.DeleteAsync($"{apiBaseUrl}/{apiEndpoint}/{parameters}");
 
             return response.IsSuccessStatusCode;
         }
