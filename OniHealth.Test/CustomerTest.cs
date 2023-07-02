@@ -8,6 +8,11 @@ using OniHealth.Infra.Repositories;
 using System.Xml.Serialization;
 using Xunit;
 using OniHealth.Domain.Enums;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
+using Moq;
+using System.Globalization;
+using System.Net;
 
 namespace OniHealth.Test
 {
@@ -57,6 +62,14 @@ namespace OniHealth.Test
         {
             int customerId = await _customerRepository.GetLastId();
             Assert.NotNull(_customerService?.Delete(customerId));
+        }
+
+        [Fact]
+        public async void Dale()
+        {
+            
+            var result = DateTime.Now.ToString("MM");
+            Assert.NotNull(result);
         }
     }
 }

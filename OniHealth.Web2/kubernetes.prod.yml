@@ -1,0 +1,79 @@
+﻿kind: Namespace
+apiVersion: v1
+metadata:
+  name: onihealtweb
+  labels:
+    name: onihealtweb
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: onihealthweb-api
+  namespace: onihealthweb
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 50%
+    type: RollingUpdate
+  imagePullSecrets:
+   - name: secret/dockerk    
+  containers:
+   - name: cont-onihealthweb-api
+     image: aureofjunior/onihealthweb-api:latest
+     ports:
+     - containerPort: 80
+     readinessProbe:
+      httpGet:
+       path: /docs
+       port: 3001
+     livenessProbe:
+      httpGet:
+       path: /health
+       port: 3000
+       initialDelaySeconds: 10
+       timeoutSeconds: 5
+       periodSeconds: 10
+       failureThreshold: 5
+     resources:
+      requests:
+       memory: "500Mi"
+       cpu: "200Mi"
+      limits:
+       memory: "500Mi"
+       cpu: "400Mi"
+
+   # Precisamos criar clusters separados para comunicação com RabbitMQ, Worker e a API
+
+   # Cluster para o RabbitMQ
+   #- name: cont-rabbitmq
+   #  image: rabbitmq
+   #  ports:
+   #  - containerPort: 5672
+  
+   # Cluster para o Worker
+   #- name: cont-wk-late-consult
+   #  image: aureofjunior/wk_late_consult:latest
+   #  ports:
+   #  - containerPort: 8080
+  restartPolicy: OnFailure
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaller
+metadata:
+ name: onihealthweb-api-hpa
+ namespace: onihealthweb
+spec:
+ scaleTargetRef:
+  apiVersion: apps/v1beta1
+  king: Deployment
+  name: onihealthweb
+ minReplicas: 1
+ maxReplicas: 2
+ targetCPUUtilizationPercentage: 80
