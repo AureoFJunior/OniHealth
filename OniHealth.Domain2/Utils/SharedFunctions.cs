@@ -147,6 +147,34 @@ namespace OniHealth.Domain.Utils
             return dequeuedObject;
         }
 
+        private static IModel? GetChannel(string queueName)
+        {
+            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
+            var factory = new ConnectionFactory()
+            {
+                HostName = rabbitMQConfiguration.HostName,
+                DispatchConsumersAsync = true
+
+            };
+
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+
+            channel.QueueDeclare(queue: queueName,
+                                 durable: false,
+                                 exclusive: false,
+                                 autoDelete: false,
+            arguments: null);
+
+            return channel;
+        }
+
+        public static async Task<T> DequeueAsync<T>(string queueName)
+        {
+            var dequeuedObject = await SharedFunctions.Dequeue<T>(queueName);
+            return dequeuedObject;
+        }
+
         private static async Task<IEnumerable<T>> DequeueList<T>(string queueName)
         {
 
