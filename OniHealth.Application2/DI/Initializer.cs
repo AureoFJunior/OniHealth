@@ -57,7 +57,7 @@ namespace OniHealth.Application.DI
             services.AddStackExchangeRedisCache(o =>
             {
                 o.InstanceName = "onihealthRedis";
-                o.Configuration = configuration.Get;
+                //o.Configuration = configuration.Get;
             });
         }
     }
