@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Channels;
 
 namespace OniHealth.Domain.Utils
 {
@@ -148,28 +149,15 @@ namespace OniHealth.Domain.Utils
 
         private static async Task<IEnumerable<T>> DequeueList<T>(string queueName)
         {
-            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitMQConfiguration.HostName,
-                DispatchConsumersAsync = true
 
-            };
             IEnumerable<T> obj = default(IEnumerable<T>);
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            var channel = GetChannel(queueName);
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            var tcs = new TaskCompletionSource<bool>();
+            consumer.Received += async (model, ea) =>
             {
-                channel.QueueDeclare(queue: queueName,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-                var consumer = new AsyncEventingBasicConsumer(channel);
-                var tcs = new TaskCompletionSource<bool>();
-                consumer.Received += async (model, ea) =>
+                try
                 {
                     var body = ea.Body;
                     var message = Encoding.UTF8.GetString(body.ToArray());
@@ -178,14 +166,18 @@ namespace OniHealth.Domain.Utils
 
                     if (SharedFunctions.IsNotNullOrEmpty(obj))
                         tcs.SetResult(true);
-                };
+                }
+                catch (Exception ex)
+                {
+                    channel.BasicNack(ea.DeliveryTag, false, true);
+                }
 
-                channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
-                                     consumer: consumer);
-                await tcs.Task;
-                return obj;
-            }
+            };
+
+            channel.BasicConsume(queueName, true, consumer);
+            await tcs.Task;
+            return obj;
+
         }
 
         public static async Task<IEnumerable<T>> DequeueListAsync<T>(string queueName)
@@ -196,42 +188,34 @@ namespace OniHealth.Domain.Utils
 
         private static async Task<T> DequeueAndProcess<T>(string queueName)
         {
-            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitMQConfiguration.HostName,
-                DispatchConsumersAsync = true
 
-            };
             T obj = default(T);
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            var channel = GetChannel(queueName);
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            var tcs = new TaskCompletionSource<T>();
+            consumer.Received += async (model, ea) =>
             {
-                channel.QueueDeclare(queue: queueName,
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-                var consumer = new AsyncEventingBasicConsumer(channel);
-                var tcs = new TaskCompletionSource<T>();
-                consumer.Received += async (model, ea) =>
+                try
                 {
                     var body = ea.Body;
                     var message = Encoding.UTF8.GetString(body.ToArray());
                     obj = JsonConvert.DeserializeObject<T>(message);
                     channel.BasicAck(ea.DeliveryTag, false);
                     tcs.SetResult(obj);
-                };
+                }
+                catch (Exception ex)
+                {
+                    channel.BasicNack(ea.DeliveryTag, false, true);
+                }
 
-                channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
-                                     consumer: consumer);
-                await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(2)));
-                return obj;
-            }
+            };
+
+            channel.BasicConsume(queueName, true, consumer);
+
+            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(2)));
+            return obj;
+
         }
 
         public static async Task<T> DequeueAndProcessAsync<T>(string queueName)
