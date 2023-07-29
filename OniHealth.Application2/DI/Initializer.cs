@@ -16,13 +16,18 @@ namespace OniHealth.Application.DI
     {
         public static void Configure(IServiceCollection services, string conection, IConfiguration configuration)
         {
+            #region DataBase
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conection));
-
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+            #endregion
+
+            #region Mapper
             var mapper = MapperConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            #endregion
 
             #region Repositorys
             services.AddScoped(typeof(IRepository<Employer>), typeof(EmployerRepository));
@@ -35,6 +40,7 @@ namespace OniHealth.Application.DI
             services.AddTransient(typeof(IRepositoryRoles), typeof(RolesRepository));
             services.AddTransient(typeof(IRepositoryConsult), typeof(ConsultRepository));
             services.AddTransient(typeof(IRepositoryPlans), typeof(PlansRepository));
+
             #endregion
 
             #region Services
@@ -48,17 +54,21 @@ namespace OniHealth.Application.DI
             services.AddScoped(typeof(IConsultTimeService<ConsultTime>), typeof(ConsultTimeService));
             services.AddScoped(typeof(IConsultTypeService<ConsultType>), typeof(ConsultTypeService));
             services.AddScoped(typeof(ICachingService), typeof(CachingService));
+
             #endregion
 
             services.AddScoped(typeof(IUnitOfWork<AppDbContext>), typeof(UnitOfWork<AppDbContext>));
-
             services.AddScoped(typeof(IValidator), typeof(Validator));
+            services.AddLogging();
 
+            #region Redis
             services.AddStackExchangeRedisCache(o =>
             {
                 o.InstanceName = "onihealthRedis";
                 //o.Configuration = configuration.Get;
             });
+
+            #endregion
         }
     }
 }

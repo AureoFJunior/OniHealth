@@ -1,18 +1,68 @@
-name: Docker Image CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - main
 
 jobs:
-
-  build:
-
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+          
+      - name: Build Application
+        run: dotnet build --configuration Release
+      
+      - name: Run Unit Tests
+        run: dotnet test --no-restore --verbosity normal
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Check ECR Repository Existence
+        id: check-ecr
+        run: |
+          aws ecr describe-repositories --repository-names <onihealtweb-api-ecr> --region us-east-1 || exit 0
+
+      - name: Create ECR Repository
+        if: steps.check-ecr.outputs['exit-code'] != '0'
+        run: |
+          aws ecr create-repository --repository-name <onihealtweb-api-ecr> --region us-east-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry: <your-ecr-registry>
+      
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t <your-ecr-registry>/<image-name>:<version> .
+          docker push <your-ecr-registry>/<image-name>:<version>
+      
+      - name: Check EKS Cluster Existence
+        id: check-eks
+        run: |
+          aws eks describe-cluster --name <onihealtweb-api-eks> --region us-east-1 || exit 0
+
+      - name: Create EKS Cluster
+        if: steps.check-eks.outputs['exit-code'] != '0'
+        run: |
+          aws eks create-cluster --name <onihealtweb-api-eks> --region us-east-1 --role-arn <your-eks-role-arn> --resources-vpc-config file://path/to/vpc-config.json
+      
+      - name: Configure AWS CLI for EKS
+        run: aws eks update-kubeconfig --name <onihealtweb-api-eks> --region us-east-1
+      
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f path/to/kubernetes-yaml-files/

@@ -6,12 +6,10 @@ using OniHealth.Domain.DTOs;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
-using OniHealth.Domain;
 using OniHealth.Domain.Interfaces.Repositories;
 using OniHealth.Domain.Interfaces.Services;
 using AutoMapper;
 using OniHealth.Web.Config;
-using OniHealth.Infra.Repositories;
 
 namespace OniHealth.Web.Controllers
 {

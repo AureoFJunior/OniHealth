@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Threading.Tasks;
-using OniHealth.Web.Config;
-using OniHealth.Domain.Enums;
 using Microsoft.Extensions.Logging;
 
 namespace OniHealth.Web.Filters
