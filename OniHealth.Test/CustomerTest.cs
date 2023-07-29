@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Moq;
 using System.Globalization;
 using System.Net;
+using OniHealth.Domain.Utils;
 
 namespace OniHealth.Test
 {
@@ -67,7 +68,34 @@ namespace OniHealth.Test
         [Fact]
         public async void Dale()
         {
-            
+            Customer customer = new Customer(null, "customerTeste@gmail.com", new DateTime(2002, 1, 18).ToUniversalTime(), 9, true, "999999999", new DateTime(2006, 6, 25).ToUniversalTime());
+            var teste = SharedFunctions.GetFieldValues(customer);
+
+            foreach (var test in teste)
+            {
+                await Console.Out.WriteLineAsync($"CHAVE [{test.Key}] VALOR [{test.Value}]");
+            }
+            var result = DateTime.Now.ToString("MM");
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void DalePolly()
+        {
+            try
+            {
+                PollyHandler polly = new PollyHandler();
+                polly?.TestePolicy.Execute(() =>
+                {
+                    Console.WriteLine("TESTE");
+                    throw new Exception();
+                });
+            }
+            catch (Exception ex)
+            {
+
+            }
+
             var result = DateTime.Now.ToString("MM");
             Assert.NotNull(result);
         }

@@ -29,7 +29,6 @@ namespace OniHealth.Worker2
                 };
 
                 UserLogin user = WorkerSharedFunctions.ConvertObject<UserLogin>(await WorkerSharedFunctions.GetAsync("User/LogInto/admin/1234"));
-                await WorkerSharedFunctions.GetAsync("Consult/SetLateConsultAppointments","", user.Token);
                 var result = await WorkerSharedFunctions.GetAsync("Consult/SetLateConsultAppointments", "", user.Token);
                 ConsultAppointment lateConsults = WorkerSharedFunctions.ConvertObject<ConsultAppointment>(result.ToString() == "[]" ? null : result);
                 cache.Set(cacheKey, lateConsults, cacheOptions);

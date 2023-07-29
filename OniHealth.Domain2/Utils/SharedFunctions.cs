@@ -1,22 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using OniHealth.Domain.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
-using System.Threading.Channels;
 
 namespace OniHealth.Domain.Utils
 {
     public static class SharedFunctions
     {
         private static readonly HttpClient _httpClient;
+        private static readonly IConfiguration _configuration;
         private static string _defaultApiUrl;
 
         static SharedFunctions()
         {
-            _defaultApiUrl = "http://localhost:80/api/";
+            _configuration = new ConfigurationBuilder().Build();
             _httpClient = new HttpClient();
+            _defaultApiUrl = _configuration.GetSection("HttpConfig")["DefaultApiUrl"];
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -24,10 +27,10 @@ namespace OniHealth.Domain.Utils
         #region RabbitMQ
         private static void Enqueue<T>(T obj, string queueName)
         {
-            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
+            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration(_configuration);
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -50,10 +53,10 @@ namespace OniHealth.Domain.Utils
 
         private static void Enqueue<T>(IEnumerable<T> obj, string queueName)
         {
-            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
+            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration(_configuration);
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -121,10 +124,10 @@ namespace OniHealth.Domain.Utils
 
         private static IModel? GetChannel(string queueName)
         {
-            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
+            RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration(_configuration);
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -132,11 +135,14 @@ namespace OniHealth.Domain.Utils
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 
+            channel.ExchangeDeclare();
             channel.QueueDeclare(queue: queueName,
                                  durable: false,
                                  exclusive: false,
                                  autoDelete: false,
             arguments: null);
+            channel.ExchangeBind();
+            channel.ConfirmSelect();
 
             return channel;
         }
@@ -274,6 +280,26 @@ namespace OniHealth.Domain.Utils
             return variable;
         }
 
+        public static Dictionary<string, string> GetFieldValues<T>(T obj)
+        {
+            Dictionary<string, string> fieldValues = new Dictionary<string, string>();
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            foreach (PropertyInfo property in properties)
+            {
+                object value = property.GetValue(obj);
+                if (value != null)
+                {
+                    string fieldName = property.Name;
+                    string fieldValue = value.ToString();
+                    fieldValues.Add(fieldName, fieldValue);
+                }
+            }
+
+            return fieldValues;
+        }
+
         #endregion
 
         #region HTTP/HTTPS
@@ -330,6 +356,7 @@ namespace OniHealth.Domain.Utils
 
             return response.IsSuccessStatusCode;
         }
+
         #endregion
     }
 }

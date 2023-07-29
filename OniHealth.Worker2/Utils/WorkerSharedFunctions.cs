@@ -31,7 +31,7 @@ namespace OniHealth.Worker2.Utils
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -62,7 +62,7 @@ namespace OniHealth.Worker2.Utils
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -103,7 +103,7 @@ namespace OniHealth.Worker2.Utils
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -148,7 +148,7 @@ namespace OniHealth.Worker2.Utils
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
@@ -196,7 +196,7 @@ namespace OniHealth.Worker2.Utils
             RabbitMQConfiguration rabbitMQConfiguration = new RabbitMQConfiguration();
             var factory = new ConnectionFactory()
             {
-                HostName = rabbitMQConfiguration.HostName,
+                HostName = rabbitMQConfiguration.QueueHostName,
                 DispatchConsumersAsync = true
 
             };
